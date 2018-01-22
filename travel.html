@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Travel</title>
+    <link rel='shortcut icon' type='image/x-icon' href='./favicon.ico' />
+    
+    <script src="https://cdn.bootcss.com/echarts/4.0.2/echarts.min.js"></script>
+    <script type="text/javascript" src="./china.js"></script> 
+    
+    <style>
+        #main {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div id="main"></div>
+
+    <script type="text/javascript">
+        var data = [
+            {name: '杭州', value: [120.1617445782, 30.2799186759, '充满感情的地方', '西湖美景，烟雨江南']},
+            {name: '西安', value: [108.9462765501, 34.3474989219, '大学生活', '一个留下了回忆的地方']},
+            {name: '珠海', value: [113.5832319144, 22.2763968747, '社会第一站', '适宜生活的地方，没有雾霾']},
+            {name: '深圳', value: [114.0661345267, 22.5485544122, '只是玩了下', '年轻的城市，挺喜欢这里']},
+            {name: '澳门', value: [113.5556075793, 22.2048369936, '挺有意思的', '体验下资本主义社会']},
+            {name: '宁德', value: [119.6808505645, 26.6456027085, '黄黄家', '感受下岛上人民的生活']},
+            {name: '黄山', value: [118.17494, 30.12959, '2018年跨年', '基友黄山5日游😊']},
+            {name: '上海', value: [121.4803295328, 31.2363429624, '一个新的征途', '感慨于魔都的繁华与忙碌']}
+        ]
+
+        var option = {
+            backgroundColor: '#404a59',
+            title: {
+                text: '这些年走过的地方',
+                subtext: '希望亮起的点越来越多...',
+                top: '10%',
+                left: 'center',
+                textStyle : {
+                    color: '#fff'
+                }
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: function(params, ticket, callback) {
+                    var time = params.value[2];
+                    var text = params.value[3];
+
+                    return time + "<br/>" + text;
+                }
+            },
+            geo: {
+                map: 'china',
+                label: {
+                    emphasis: {
+                        show: false
+                    }
+                },
+                roam: false,
+                itemStyle: {
+                    normal: {
+                        areaColor: '#323c48',
+                        borderColor: '#404a59'
+                    },
+                    emphasis: {
+                        areaColor: '#2a333d'
+                    }
+                }
+            },
+            series: [
+                {
+                    name: '地点',
+                    type: 'effectScatter',
+                    coordinateSystem: 'geo',
+                    data: data,
+                    symbolSize: 10,
+                    label: {
+                        normal: {
+                            formatter: '{b}',
+                            position: 'right',
+                            show: false
+                        },
+                        emphasis: {
+                            show: true
+                        }
+                    },
+                    itemStyle: {
+                        normal: {
+                            color: '#a6c84c'
+                        }
+                    }
+                }
+            ]
+        };
+
+        var content = document.getElementById('main');
+        var myChart = echarts.init(content);
+
+        myChart.setOption(option);
+    </script>
+
+</body>
+</html>

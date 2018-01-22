@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Renyijiu's page</title>
+    <link rel='shortcut icon' type='image/x-icon' href='./favicon.ico' />
+
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+            color: #000000;
+        }
+
+        #wrapper {
+            position: relative;
+            top: 50%;
+            transform: translateY(-50%);
+            text-align: center;
+            font-family: "STXingkaiSC-Light";
+        }
+
+        #box {
+            width: 380px;
+            height: 150px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px 10px 30px 10px;
+            border-radius: 10px;
+            box-shadow: 0 10px 17px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        }
+
+        .title {
+            font-size: 36px;
+        }
+
+        .intro {
+            font-size: 20px;
+        }
+
+        .links {
+            font-size: 20px;
+            display: flex;
+        }
+
+        .links>a {
+            flex: 1;
+            text-decoration: none;
+            color: #000000;
+        }
+
+        .links>a:hover {
+            color: #cf6262;
+        }
+
+        #background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+            z-index: -1000;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="wrapper">
+        <div id="box">
+            <div class="title">
+                <span>Renyijiu</span>
+            </div>
+
+            <div class="intro">
+                <p>潜心打码，努力学习新技能</p>
+            </div>
+
+            <div class="links">
+                <a href="https://blog.renyijiu.com" target="_blank">Blog</a>
+
+                <a href="https://github.com/renyijiu" target="_blank">Github</a>
+
+                <a href="./travel.html" target="_blank">Travel</a>
+            </div>
+        </div>
+    </div>
+
+    <canvas id="background"></canvas>
+    <script type="text/javascript">
+        /*
+        *   2018-01-20
+        *   author: renyijiu
+        */
+
+        var canvas = document.getElementById('background');
+        var list = []; //save the ball instance
+        var count = parseInt(Math.random() * 10) + 20; 
+
+        function resize(canvas) {
+            var realToCSSPixels = window.devicePixelRatio;
+
+            // Lookup the size the browser is displaying the canvas.
+            var displayWidth  = Math.floor(canvas.clientWidth * realToCSSPixels);
+            var displayHeight = Math.floor(canvas.clientHeight * realToCSSPixels);
+            
+            // Check if the canvas is not the same size.
+            if (canvas.width  !== displayWidth ||
+                canvas.height !== displayHeight) {
+            
+                // Make the canvas the same size
+                canvas.width  = displayWidth;
+                canvas.height = displayHeight;
+            }
+        }
+
+        function color(){
+            var r = Math.floor(Math.random() * 255);
+            var g = Math.floor(Math.random() * 255);
+            var b = Math.floor(Math.random() * 255);
+            var o = (Math.random() * 0.4 + 0.5).toFixed(1);
+            
+            return 'rgba('+ r +','+ g +','+ b + ',' + o + ')';
+        }
+        
+        function Ball() {
+            this.x = parseInt(Math.random() * canvas.width);
+            this.y = parseInt(Math.random() * canvas.height);
+            this.vx = parseInt(Math.random() * 3 + 1);
+            this.vy = parseInt(Math.random() * 3 + 1);
+            this.radius = parseInt(Math.random() * 35) + 5;
+            this.color = color();
+        }
+
+        Ball.prototype.draw = function() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, true);
+            ctx.closePath();
+            ctx.fillStyle = this.color;
+            ctx.fill();
+        }
+
+        Ball.prototype.update = function() {
+            this.draw();
+
+            this.x += this.vx;
+            this.y += this.vy;
+
+            if (this.y > canvas.height || this.y < 0) {
+                this.vy = -this.vy;
+            }
+
+            if (this.x > canvas.width || this.x < 0) {
+                this.vx = -this.vx;
+            }
+        }
+
+        if (canvas.getContext) {
+            var ctx = canvas.getContext('2d');
+            
+            resize(canvas);  
+            for (var i=0; i<count; i++ ) {
+                var ball = new Ball();
+                list.push(ball);
+            }
+            
+            setInterval(function() {
+                resize(canvas);    
+                ctx.clearRect(0,0, canvas.width, canvas.height);
+                
+                for(var i = 0; i < list.length; i++) {
+                    list[i].update();
+                }
+            }, 15)
+        }
+    </script>
+</body>
+</html>
