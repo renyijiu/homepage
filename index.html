@@ -447,58 +447,92 @@
             color: var(--accent);
         }
 
-        /* code */
-
-        .repos {
+        /* code: a small drawing for each project */
+        .works {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 2.75rem 2.5rem;
             margin: 0;
             padding: 0;
             list-style: none;
         }
 
-        .repos li {
-            border-top: 1px solid var(--line);
+        .works svg {
+            display: block;
+            width: 100%;
+            height: auto;
+            margin-bottom: 1.1rem;
+            border: 1px solid var(--line);
+            border-radius: 4px;
+            background: var(--land);
+            fill: none;
+            stroke: var(--ink);
+            stroke-width: 1.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
         }
 
-        .repos li:first-child {
-            border-top: 0;
+        .works svg .a {
+            stroke: var(--accent);
         }
 
-        .repos a {
-            display: grid;
-            grid-template-columns: 11rem minmax(0, 1fr) auto;
-            column-gap: 1.5rem;
-            align-items: baseline;
-            padding: .85rem 0;
+        .works svg .f {
+            fill: var(--land);
+        }
+
+        .works svg .dot {
+            fill: var(--accent);
+            stroke: none;
+        }
+
+        .works svg .ink {
+            fill: var(--ink);
+            stroke: none;
+        }
+
+        .works svg text {
+            fill: var(--ink);
+            stroke: none;
+            font: 600 15px var(--sans);
+            text-anchor: middle;
+            dominant-baseline: central;
+        }
+
+        .works svg text.a {
+            fill: var(--accent);
+            stroke: none;
+        }
+
+        .works h3 {
+            margin: 0 0 .3rem;
+            font-size: 1.0625rem;
+            font-weight: 600;
+        }
+
+        .works h3 a {
             text-decoration: none;
         }
 
-        .repos li:first-child a {
-            padding-top: 0;
-        }
-
-        .repos a:hover {
-            color: inherit;
-        }
-
-        .repos b {
-            font-family: var(--mono);
-            font-size: .9375rem;
-            font-weight: 400;
-            text-decoration: underline;
-            text-decoration-color: var(--muted);
-            text-decoration-thickness: 1px;
-            text-underline-offset: .22em;
-            transition: color .15s;
-        }
-
-        .repos a:hover b {
-            color: var(--accent);
-            text-decoration-color: currentColor;
-        }
-
-        .repos em {
+        .works h3 code {
+            margin-left: .45rem;
             color: var(--muted);
-            font-size: .875rem;
+            font: .875rem var(--mono);
+        }
+
+        .works p {
+            color: var(--muted);
+            font-size: .9375rem;
+        }
+
+        .works .links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: .2rem 1.1rem;
+            margin-top: .55rem;
+            color: var(--ink);
+        }
+
+        .works .links em {
             font-style: normal;
         }
 
@@ -577,13 +611,9 @@
                 padding: 3rem 0 3.5rem;
             }
 
-            .repos a {
-                grid-template-columns: minmax(0, 1fr) auto;
-            }
-
-            .repos span {
-                grid-row: 2;
-                grid-column: 1 / -1;
+            .works {
+                grid-template-columns: minmax(0, 1fr);
+                gap: 2.25rem;
             }
         }
 
@@ -773,41 +803,81 @@
             <h2>写过的东西</h2>
 
             <div>
-                <ul class="repos">
+                <ul class="works">
                     <li>
-                        <a href="https://github.com/renyijiu/kinlogue">
-                            <b>kinlogue</b>
-                            <span>macOS 上的本地医疗文档整理工具，隐私优先。</span>
-                            <em>Swift</em>
-                        </a>
+                        <svg viewBox="0 0 320 180" aria-hidden="true">
+                            <!-- 听宇: the cover turns into a planet, its orbit is the progress bar -->
+                            <g transform="rotate(-12 160 92)">
+                                <ellipse cx="160" cy="92" rx="104" ry="26"/>
+                                <circle class="f" cx="160" cy="92" r="30"/>
+                                <path d="M134 80c16 5 36 5 52 0M131 96c18 5 40 5 58 0"/>
+                                <path d="M56 92a104 26 0 0 0 208 0"/>
+                                <path class="a" d="M56 92a104 26 0 0 0 177.5 18.4"/>
+                                <circle class="dot" cx="233.5" cy="110.4" r="4.5"/>
+                            </g>
+                            <path d="M52 40v10M47 45h10M262 34v8M258 38h8M276 140v8M272 144h8"/>
+                            <circle class="ink" cx="96" cy="30" r="1.6"/>
+                            <circle class="ink" cx="228" cy="58" r="1.6"/>
+                            <circle class="ink" cx="40" cy="132" r="1.6"/>
+                            <circle class="ink" cx="190" cy="156" r="1.6"/>
+                            <circle class="ink" cx="122" cy="150" r="1.2"/>
+                        </svg>
+                        <h3><a href="https://github.com/renyijiu/tingyu">听宇</a><code>tingyu</code></h3>
+                        <p>用 Go 写的 Mac 播客客户端。界面是一片夜空，节目封面的颜色会染进背景的星云，每一集听到哪里都记着。</p>
+                        <p class="links"><a href="https://github.com/renyijiu/tingyu">GitHub</a><em>Go</em></p>
                     </li>
                     <li>
-                        <a href="https://github.com/renyijiu/chinese-chess">
-                            <b>chinese-chess</b>
-                            <span>浏览器里的 3D 中国象棋，可以本地对弈，也可以和 AI 下。</span>
-                            <em>TypeScript</em>
-                        </a>
+                        <svg viewBox="0 0 320 180" aria-hidden="true">
+                            <!-- 象棋: a corner of the board, the river, two pieces -->
+                            <path d="M40 30h240M40 60h240M40 90h240M40 150h240M70 30v60M100 30v60M130 30v60M160 30v60M190 30v60M220 30v60M250 30v60M70 150v20M100 150v20M130 150v20M160 150v20M190 150v20M220 150v20M250 150v20M130 30l60 60M190 30l-60 60"/>
+                            <path d="M40 120h240" stroke-dasharray="2 6"/>
+                            <circle class="f" cx="160" cy="60" r="19"/>
+                            <circle cx="160" cy="60" r="14"/>
+                            <text x="160" y="61">将</text>
+                            <circle class="f a" cx="100" cy="150" r="19"/>
+                            <circle class="a" cx="100" cy="150" r="14"/>
+                            <text class="a" x="100" y="151">炮</text>
+                            <path class="a" d="M100 126V96" stroke-dasharray="1 5"/>
+                        </svg>
+                        <h3><a href="https://github.com/renyijiu/chinese-chess">中国象棋</a><code>chinese-chess</code></h3>
+                        <p>浏览器里的 3D 中国象棋，棋子是 Q 版兵马俑，棋盘是一座陶土沙盘。可以两个人轮流下，也可以和 AI 下。</p>
+                        <p class="links"><a href="https://github.com/renyijiu/chinese-chess">GitHub</a><em>TypeScript</em></p>
                     </li>
                     <li>
-                        <a href="https://github.com/renyijiu/douyin_downloader">
-                            <b>douyin_downloader</b>
-                            <span>下载指定用户的所有抖音视频以及收藏的视频（无水印）。</span>
-                            <em>Python</em>
-                        </a>
+                        <svg viewBox="0 0 320 180" aria-hidden="true">
+                            <!-- 方块上海: Lujiazui in blocks across the Huangpu -->
+                            <path d="M24 136h272"/>
+                            <path class="f" d="M48 136v-34h22v34M76 136v-52h20v52M102 136v-24h18v24"/>
+                            <path class="f a" d="M139 136l6-28h10l6 28"/>
+                            <path class="a" d="M150 108V34"/>
+                            <circle class="f a" cx="150" cy="96" r="12"/>
+                            <circle class="f a" cx="150" cy="58" r="8"/>
+                            <circle class="dot" cx="150" cy="34" r="3"/>
+                            <path class="f" d="M182 136V44l14-12 14 12v92"/>
+                            <path d="M196 32v-6M189 60h14M189 82h14M189 104h14"/>
+                            <path class="f" d="M222 136V30h18v106zM226 42h10v8h-10z"/>
+                            <path class="f" d="M250 136V66h20v70"/>
+                            <path d="M42 152h22M80 152h30M126 152h18M168 152h40M224 152h26M266 152h16M60 164h28M140 164h44M214 164h30"/>
+                        </svg>
+                        <h3><a href="https://shanghai.renyijiu.com/">方块上海</a><code>block-shanghai</code></h3>
+                        <p>方块搭成的上海，街道和地铁都按真实数据来。可以在城里散步、坐遍 1 到 18 号线，给外滩、豫园这些地方拍照。</p>
+                        <p class="links"><a href="https://shanghai.renyijiu.com/">去逛逛</a><a href="https://github.com/renyijiu/block-shanghai">GitHub</a><em>TypeScript</em></p>
                     </li>
                     <li>
-                        <a href="https://github.com/renyijiu/daily_image">
-                            <b>daily_image</b>
-                            <span>日签，生成一张指定日期的图片，可以当日历用。Just for fun.</span>
-                            <em>Ruby</em>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="https://github.com/renyijiu/id_validator">
-                            <b>id_validator</b>
-                            <span>校验中国大陆居民身份证号的 Ruby gem。</span>
-                            <em>Ruby</em>
-                        </a>
+                        <svg viewBox="0 0 320 180" aria-hidden="true">
+                            <!-- 续页: stacked reports, one line running through them -->
+                            <path class="f" d="M120 40h70l18 18v96h-88z"/>
+                            <path class="f" d="M104 30h70l18 18v96h-88z"/>
+                            <path class="f" d="M88 20h70l18 18v96H88z"/>
+                            <path d="M158 20v18h18M102 52h40M102 66h56M102 80h48M102 94h56"/>
+                            <path class="a" d="M60 152c30 0 40-34 70-34s34 30 66 30 30-40 64-40"/>
+                            <circle class="f a" cx="96" cy="128" r="5"/>
+                            <circle class="f a" cx="164" cy="138" r="5"/>
+                            <circle class="dot" cx="236" cy="113" r="5"/>
+                        </svg>
+                        <h3><a href="https://github.com/renyijiu/kinlogue">续页</a><code>kinlogue</code></h3>
+                        <p>Mac 上的家庭健康记录。把检查报告、化验单按人和时间串起来，复诊时翻得到。资料只放在自己电脑里。</p>
+                        <p class="links"><a href="https://github.com/renyijiu/kinlogue">GitHub</a><em>Swift</em></p>
                     </li>
                 </ul>
 
