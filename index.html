@@ -460,47 +460,12 @@
         .works svg {
             display: block;
             width: 100%;
-            height: auto;
+            height: 11.25rem;
             margin-bottom: 1.1rem;
+            padding: 1.25rem;
             border: 1px solid var(--line);
             border-radius: 4px;
             background: var(--land);
-            fill: none;
-            stroke: var(--ink);
-            stroke-width: 1.5;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-        }
-
-        .works svg .a {
-            stroke: var(--accent);
-        }
-
-        .works svg .f {
-            fill: var(--land);
-        }
-
-        .works svg .dot {
-            fill: var(--accent);
-            stroke: none;
-        }
-
-        .works svg .ink {
-            fill: var(--ink);
-            stroke: none;
-        }
-
-        .works svg text {
-            fill: var(--ink);
-            stroke: none;
-            font: 600 15px var(--sans);
-            text-anchor: middle;
-            dominant-baseline: central;
-        }
-
-        .works svg text.a {
-            fill: var(--accent);
-            stroke: none;
         }
 
         .works h3 {
@@ -628,6 +593,143 @@
             }
         }
     </style>
+    <style>
+        /* 有 WebGL 的时候，整页变成一张桌子；上面的文档还在，只是看不见，留给读屏软件和搜索引擎 */
+        .table,
+        .table body {
+            height: 100%;
+            overflow: hidden;
+            background: #f1f4f7;
+        }
+
+        .table body {
+            max-width: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .table body>header,
+        .table body>main,
+        .table body>footer,
+        #say {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            clip-path: inset(50%);
+            white-space: nowrap;
+        }
+
+        #board {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+            touch-action: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        /* 盖在印出来的字上面的真链接、真按钮 */
+        #ui a,
+        #ui button {
+            position: fixed;
+            display: block;
+            margin: 0;
+            padding: 0;
+            border: 0;
+            background: none;
+            color: transparent;
+            font: 1px/1 sans-serif;
+            text-decoration: none;
+            overflow: hidden;
+            cursor: pointer;
+            outline: none;
+            touch-action: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        #ui [hidden] {
+            display: none;
+        }
+
+        #ui a:focus-visible,
+        #ui button:focus-visible {
+            outline: 2px solid #cc3519;
+            outline-offset: 3px;
+            border-radius: 2px;
+        }
+
+        #ui .pick {
+            cursor: default;
+        }
+
+        #ui .dome {
+            border-radius: 50%;
+        }
+
+        /* 手型只改桌子自己的元素，不动 <html>，免得整页重算样式 */
+        #board.grab,
+        #ui.grab a,
+        #ui.grab button {
+            cursor: grab;
+        }
+
+        #board.grabbing,
+        #ui.grabbing a,
+        #ui.grabbing button {
+            cursor: grabbing;
+        }
+
+        #tag {
+            position: fixed;
+            left: 0;
+            top: 0;
+            color: #16191d;
+            font-size: .75rem;
+            font-weight: 500;
+            line-height: 1;
+            white-space: nowrap;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity .15s;
+        }
+
+        #tag.on {
+            opacity: 1;
+        }
+
+        /* 文档页脚里回到桌子的那个按钮：只有桌子能用的时候脚本才放进来 */
+        #to-table {
+            margin: 0 0 0 1.25rem;
+            padding: 0;
+            border: 0;
+            background: none;
+            color: inherit;
+            font: inherit;
+            cursor: pointer;
+        }
+
+        #to-table:hover,
+        #to-table:focus-visible {
+            color: var(--accent);
+        }
+
+        #to-table:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 3px;
+            border-radius: 2px;
+        }
+
+        #to-table[hidden] {
+            display: none;
+        }
+    </style>
 </head>
 
 <body>
@@ -637,8 +739,8 @@
         <nav>
             <a href="#places">足迹</a>
             <a href="#code">代码</a>
-            <a href="https://run.renyijiu.com/">跑步</a>
-            <a href="https://github.com/renyijiu">GitHub</a>
+            <a href="https://run.renyijiu.com/" target="_blank" rel="noopener">跑步</a>
+            <a href="https://github.com/renyijiu" target="_blank" rel="noopener">GitHub</a>
         </nav>
     </header>
 
@@ -646,7 +748,7 @@
         <section class="row intro">
             <div>
                 <h1>写代码，也跑步、旅行。</h1>
-                <p><span class="nb">这里记着我</span><a href="#places">走过的地方</a>、<a href="#code">写过的一些东西</a>，<span class="nb">还有<a href="https://run.renyijiu.com/">每一次跑步</a>。</span></p>
+                <p><span class="nb">这里记着我</span><a href="#places">走过的地方</a>、<a href="#code">写过的一些东西</a>，<span class="nb">还有<a href="https://run.renyijiu.com/" target="_blank" rel="noopener">每一次跑步</a>。</span></p>
             </div>
         </section>
 
@@ -805,96 +907,179 @@
             <div>
                 <ul class="works">
                     <li>
-                        <svg viewBox="0 0 320 180" aria-hidden="true">
-                            <!-- 听宇: the cover turns into a planet, its orbit is the progress bar -->
-                            <g transform="rotate(-12 160 92)">
-                                <ellipse cx="160" cy="92" rx="104" ry="26"/>
-                                <circle class="f" cx="160" cy="92" r="30"/>
-                                <path d="M134 80c16 5 36 5 52 0M131 96c18 5 40 5 58 0"/>
-                                <path d="M56 92a104 26 0 0 0 208 0"/>
-                                <path class="a" d="M56 92a104 26 0 0 0 177.5 18.4"/>
-                                <circle class="dot" cx="233.5" cy="110.4" r="4.5"/>
+                        <svg viewBox="0 0 240 240" aria-hidden="true">
+                            <!-- 听宇：玻璃罩下的一小片星空，绕着行星的轨道就是播放进度 -->
+                            <defs>
+                                <clipPath id="ty-disc"><circle cx="120" cy="120" r="112"/></clipPath>
+                                <radialGradient id="ty-amber"><stop offset="0" stop-color="#f2a24e" stop-opacity=".62"/><stop offset="1" stop-color="#f2a24e" stop-opacity="0"/></radialGradient>
+                                <radialGradient id="ty-violet"><stop offset="0" stop-color="#9a68f0" stop-opacity=".58"/><stop offset="1" stop-color="#9a68f0" stop-opacity="0"/></radialGradient>
+                                <radialGradient id="ty-teal"><stop offset="0" stop-color="#25b0a0" stop-opacity=".5"/><stop offset="1" stop-color="#25b0a0" stop-opacity="0"/></radialGradient>
+                                <linearGradient id="ty-planet" x1="0" y1="0" x2="1" y2="1"><stop offset=".52" stop-color="#f6c46e"/><stop offset=".52" stop-color="#e06a3c"/></linearGradient>
+                            </defs>
+                            <g clip-path="url(#ty-disc)">
+                                <rect width="240" height="240" fill="#1b1f3b"/>
+                                <ellipse cx="70" cy="80" rx="96" ry="70" fill="url(#ty-amber)"/>
+                                <ellipse cx="180" cy="96" rx="80" ry="78" fill="url(#ty-violet)"/>
+                                <ellipse cx="146" cy="196" rx="100" ry="62" fill="url(#ty-teal)"/>
+                                <g fill="#ffffff">
+                                    <circle cx="96" cy="38" r="2.4"/>
+                                    <circle cx="58" cy="54" r="1.5" opacity=".75"/>
+                                    <circle cx="136" cy="58" r="1.4" opacity=".6"/>
+                                    <circle cx="160" cy="30" r="1.2" opacity=".55"/>
+                                    <circle cx="206" cy="70" r="2.1" opacity=".9"/>
+                                    <circle cx="216" cy="116" r="1.3" opacity=".6"/>
+                                    <circle cx="40" cy="104" r="1.9" opacity=".85"/>
+                                    <circle cx="24" cy="146" r="1.1" opacity=".5"/>
+                                    <circle cx="150" cy="100" r="1.1" opacity=".55"/>
+                                    <circle cx="186" cy="176" r="1.8" opacity=".85"/>
+                                    <circle cx="210" cy="164" r="1.1" opacity=".5"/>
+                                    <circle cx="150" cy="208" r="1.5" opacity=".7"/>
+                                    <circle cx="92" cy="206" r="1.2" opacity=".6"/>
+                                    <circle cx="54" cy="186" r="2" opacity=".9"/>
+                                    <path d="M176 44Q176 58 190 58Q176 58 176 72Q176 58 162 58Q176 58 176 44Z"/>
+                                    <path d="M62 116Q62 124 70 124Q62 124 62 132Q62 124 54 124Q62 124 62 116Z" opacity=".8"/>
+                                </g>
+                                <g transform="rotate(-18 104 136)" fill="none" stroke-linecap="round">
+                                    <ellipse cx="104" cy="136" rx="86" ry="24" stroke="#ffffff" stroke-opacity=".38" stroke-width="2.4"/>
+                                </g>
+                                <circle cx="104" cy="136" r="30" fill="url(#ty-planet)"/>
+                                <path d="M80 118a30 30 0 0 1 36-9" fill="none" stroke="#ffffff" stroke-opacity=".35" stroke-width="3" stroke-linecap="round"/>
+                                <g transform="rotate(-18 104 136)" fill="none" stroke-linecap="round">
+                                    <path d="M18 136A86 24 0 0 0 190 136" stroke="#ffffff" stroke-opacity=".38" stroke-width="2.4"/>
+                                    <path d="M23.2 144.2A86 24 0 0 0 187.1 142.2" stroke="#ffe8c2" stroke-width="5.5"/>
+                                    <circle cx="187.1" cy="142.2" r="7" fill="#fff4e2"/>
+                                </g>
                             </g>
-                            <path d="M52 40v10M47 45h10M262 34v8M258 38h8M276 140v8M272 144h8"/>
-                            <circle class="ink" cx="96" cy="30" r="1.6"/>
-                            <circle class="ink" cx="228" cy="58" r="1.6"/>
-                            <circle class="ink" cx="40" cy="132" r="1.6"/>
-                            <circle class="ink" cx="190" cy="156" r="1.6"/>
-                            <circle class="ink" cx="122" cy="150" r="1.2"/>
                         </svg>
-                        <h3><a href="https://github.com/renyijiu/tingyu">听宇</a><code>tingyu</code></h3>
+                        <h3><a href="https://github.com/renyijiu/tingyu" target="_blank" rel="noopener">听宇</a><code>tingyu</code></h3>
                         <p>用 Go 写的 Mac 播客客户端。界面是一片夜空，节目封面的颜色会染进背景的星云，每一集听到哪里都记着。</p>
-                        <p class="links"><a href="https://github.com/renyijiu/tingyu">GitHub</a><em>Go</em></p>
+                        <p class="links"><a href="https://github.com/renyijiu/tingyu" target="_blank" rel="noopener">GitHub</a><em>Go</em></p>
                     </li>
                     <li>
-                        <svg viewBox="0 0 320 180" aria-hidden="true">
-                            <!-- 象棋: a corner of the board, the river, two pieces -->
-                            <path d="M40 30h240M40 60h240M40 90h240M40 150h240M70 30v60M100 30v60M130 30v60M160 30v60M190 30v60M220 30v60M250 30v60M70 150v20M100 150v20M130 150v20M160 150v20M190 150v20M220 150v20M250 150v20M130 30l60 60M190 30l-60 60"/>
-                            <path d="M40 120h240" stroke-dasharray="2 6"/>
-                            <circle class="f" cx="160" cy="60" r="19"/>
-                            <circle cx="160" cy="60" r="14"/>
-                            <text x="160" y="61">将</text>
-                            <circle class="f a" cx="100" cy="150" r="19"/>
-                            <circle class="a" cx="100" cy="150" r="14"/>
-                            <text class="a" x="100" y="151">炮</text>
-                            <path class="a" d="M100 126V96" stroke-dasharray="1 5"/>
+                        <svg viewBox="0 0 240 240" aria-hidden="true">
+                            <!-- 中国象棋：从上面看下去的一枚陶土棋子 -->
+                            <defs>
+                                <clipPath id="xq-disc"><circle cx="120" cy="120" r="112"/></clipPath>
+                            </defs>
+                            <g clip-path="url(#xq-disc)">
+                                <circle cx="120" cy="120" r="112" fill="#a65b33"/>
+                                <circle cx="120" cy="120" r="107" fill="#b8693d"/>
+                                <circle cx="120" cy="120" r="96" fill="#cf8a57"/>
+                                <circle cx="120" cy="120" r="86" fill="none" stroke="#9c522b" stroke-width="5"/>
+                                <circle cx="120" cy="120" r="77" fill="none" stroke="#9c522b" stroke-width="2.5"/>
+                                <g fill="#7a3d1d" opacity=".22">
+                                    <circle cx="62" cy="88" r="1.6"/><circle cx="168" cy="62" r="1.2"/><circle cx="182" cy="150" r="1.8"/>
+                                    <circle cx="92" cy="182" r="1.3"/><circle cx="148" cy="196" r="1"/><circle cx="54" cy="140" r="1.1"/>
+                                    <circle cx="122" cy="44" r="1.2"/><circle cx="196" cy="110" r="1"/>
+                                </g>
+                                <g fill="#f1c39a" opacity=".35">
+                                    <circle cx="80" cy="58" r="1.3"/><circle cx="190" cy="84" r="1"/><circle cx="160" cy="176" r="1.4"/>
+                                    <circle cx="68" cy="166" r="1.1"/><circle cx="104" cy="200" r="1"/><circle cx="44" cy="112" r="1.2"/>
+                                </g>
+                                <text x="120" y="121" fill="#3a1d10" font-family='"STKaiti", "KaiTi", "Songti SC", serif' font-size="104" font-weight="700" text-anchor="middle" dominant-baseline="central">将</text>
+                            </g>
                         </svg>
-                        <h3><a href="https://github.com/renyijiu/chinese-chess">中国象棋</a><code>chinese-chess</code></h3>
+                        <h3><a href="https://github.com/renyijiu/chinese-chess" target="_blank" rel="noopener">中国象棋</a><code>chinese-chess</code></h3>
                         <p>浏览器里的 3D 中国象棋，棋子是 Q 版兵马俑，棋盘是一座陶土沙盘。可以两个人轮流下，也可以和 AI 下。</p>
-                        <p class="links"><a href="https://github.com/renyijiu/chinese-chess">GitHub</a><em>TypeScript</em></p>
+                        <p class="links"><a href="https://github.com/renyijiu/chinese-chess" target="_blank" rel="noopener">GitHub</a><em>TypeScript</em></p>
                     </li>
                     <li>
-                        <svg viewBox="0 0 320 180" aria-hidden="true">
-                            <!-- 方块上海: Lujiazui in blocks across the Huangpu -->
-                            <path d="M24 136h272"/>
-                            <path class="f" d="M48 136v-34h22v34M76 136v-52h20v52M102 136v-24h18v24"/>
-                            <path class="f a" d="M139 136l6-28h10l6 28"/>
-                            <path class="a" d="M150 108V34"/>
-                            <circle class="f a" cx="150" cy="96" r="12"/>
-                            <circle class="f a" cx="150" cy="58" r="8"/>
-                            <circle class="dot" cx="150" cy="34" r="3"/>
-                            <path class="f" d="M182 136V44l14-12 14 12v92"/>
-                            <path d="M196 32v-6M189 60h14M189 82h14M189 104h14"/>
-                            <path class="f" d="M222 136V30h18v106zM226 42h10v8h-10z"/>
-                            <path class="f" d="M250 136V66h20v70"/>
-                            <path d="M42 152h22M80 152h30M126 152h18M168 152h40M224 152h26M266 152h16M60 164h28M140 164h44M214 164h30"/>
+                        <svg viewBox="0 0 240 240" aria-hidden="true">
+                            <!-- 方块上海：方块搭的陆家嘴，江对岸是天际线，近处是地铁 -->
+                            <defs>
+                                <clipPath id="sh-disc"><circle cx="120" cy="120" r="112"/></clipPath>
+                            </defs>
+                            <g clip-path="url(#sh-disc)">
+                                <rect width="240" height="240" fill="#dbe8f2"/>
+                                <rect y="146" width="240" height="14" fill="#bcc8b4"/>
+                                <path d="M34 148V128H52V148Z" fill="#a8b6c4"/><path d="M52 148V128L58 124V144Z" fill="#8494a6"/><path d="M34 128L40 124H58L52 128Z" fill="#cbd5df"/>
+                                <path d="M52 148V118H66V148Z" fill="#b3c0cc"/><path d="M66 148V118L72 114V144Z" fill="#8e9db0"/><path d="M52 118L58 114H72L66 118Z" fill="#d3dce5"/>
+                                <path d="M114 148V100H132V148Z" fill="#bba98a"/><path d="M132 148V100L138 96V144Z" fill="#958468"/>
+                                <path d="M117 100V80H129V100Z" fill="#bba98a"/><path d="M129 100V80L135 76V96Z" fill="#958468"/><path d="M114 100L120 96H138L132 100Z" fill="#dacdb2"/>
+                                <path d="M119 80V64H127V80Z" fill="#bba98a"/><path d="M127 80V64L131 61V77Z" fill="#958468"/><path d="M117 80L123 76H135L129 80Z" fill="#dacdb2"/>
+                                <path d="M121 64V54H125V64Z" fill="#bba98a"/><path d="M119 64L123 61H131L127 64Z" fill="#dacdb2"/>
+                                <path d="M123 54V40" stroke="#958468" stroke-width="2" stroke-linecap="round"/>
+                                <path d="M140 148V46H155V148Z" fill="#b4c3cf"/><path d="M155 148V46L161 42V144Z" fill="#8a9aa9"/><path d="M140 46L146 42H161L155 46Z" fill="#dbe3ea"/>
+                                <path d="M143 52H152L150 61H145Z" fill="#dbe8f2"/>
+                                <path d="M162 148L164 104H182L184 148Z" fill="#9db7c3"/><path d="M184 148L182 104L188 100L190 144Z" fill="#7893a1"/>
+                                <path d="M164 104L166 64H180L182 104Z" fill="#a8c0cb"/><path d="M182 104L180 64L186 60L188 100Z" fill="#7f99a7"/>
+                                <path d="M166 64L168 34H178L180 64Z" fill="#b2c8d2"/><path d="M180 64L178 34L183 31L186 60Z" fill="#86a0ad"/>
+                                <path d="M168 34L173 30H183L178 34Z" fill="#d6e4ea"/>
+                                <path d="M192 148V124H208V148Z" fill="#aab8c6"/><path d="M208 148V124L214 120V144Z" fill="#8696a8"/><path d="M192 124L198 120H214L208 124Z" fill="#ccd6e0"/>
+                                <path d="M208 148V134H222V148Z" fill="#b6c2ce"/><path d="M208 134L214 130H228L222 134Z" fill="#d4dde6"/>
+                                <g stroke="#a92a12" stroke-linecap="round" fill="none">
+                                    <path d="M76 148L86 116M100 148L90 116" stroke-width="4"/>
+                                    <path d="M88 148V40" stroke-width="4.5"/>
+                                </g>
+                                <circle cx="88" cy="110" r="13" fill="#cc3519"/>
+                                <path d="M78 104a13 13 0 0 1 14-7" fill="none" stroke="#e8735a" stroke-width="3.5" stroke-linecap="round"/>
+                                <circle cx="88" cy="74" r="8.5" fill="#cc3519"/>
+                                <path d="M82 70a8.5 8.5 0 0 1 8-4" fill="none" stroke="#e8735a" stroke-width="2.8" stroke-linecap="round"/>
+                                <circle cx="88" cy="54" r="4" fill="#cc3519"/>
+                                <path d="M0 155C80 161 160 153 240 146V167C160 174 80 184 0 182Z" fill="#4e92cd"/>
+                                <path d="M0 182C80 184 160 174 240 167V240H0Z" fill="#e9e2d2"/>
+                                <g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="6.5">
+                                    <path d="M122 234L136 222H168" stroke="#f3c600"/>
+                                    <path d="M66 222L80 208H138L152 194H192" stroke="#78b833"/>
+                                    <path d="M44 196H96L110 210H170" stroke="#e3102f"/>
+                                </g>
+                                <g fill="#ffffff">
+                                    <circle cx="62" cy="196" r="3.2"/><circle cx="96" cy="196" r="3.2"/><circle cx="148" cy="210" r="3.2"/>
+                                    <circle cx="80" cy="208" r="3.2"/><circle cx="116" cy="208" r="3.2"/><circle cx="174" cy="194" r="3.2"/>
+                                    <circle cx="136" cy="222" r="3.2"/><circle cx="156" cy="222" r="3.2"/>
+                                </g>
+                            </g>
                         </svg>
-                        <h3><a href="https://shanghai.renyijiu.com/">方块上海</a><code>block-shanghai</code></h3>
+                        <h3><a href="https://shanghai.renyijiu.com/" target="_blank" rel="noopener">方块上海</a><code>block-shanghai</code></h3>
                         <p>方块搭成的上海，街道和地铁都按真实数据来。可以在城里散步、坐遍 1 到 18 号线，给外滩、豫园这些地方拍照。</p>
-                        <p class="links"><a href="https://shanghai.renyijiu.com/">去逛逛</a><a href="https://github.com/renyijiu/block-shanghai">GitHub</a><em>TypeScript</em></p>
+                        <p class="links"><a href="https://shanghai.renyijiu.com/" target="_blank" rel="noopener">去逛逛</a><a href="https://github.com/renyijiu/block-shanghai" target="_blank" rel="noopener">GitHub</a><em>TypeScript</em></p>
                     </li>
                     <li>
-                        <svg viewBox="0 0 320 180" aria-hidden="true">
-                            <!-- 续页: stacked reports, one line running through them -->
-                            <path class="f" d="M120 40h70l18 18v96h-88z"/>
-                            <path class="f" d="M104 30h70l18 18v96h-88z"/>
-                            <path class="f" d="M88 20h70l18 18v96H88z"/>
-                            <path d="M158 20v18h18M102 52h40M102 66h56M102 80h48M102 94h56"/>
-                            <path class="a" d="M60 152c30 0 40-34 70-34s34 30 66 30 30-40 64-40"/>
-                            <circle class="f a" cx="96" cy="128" r="5"/>
-                            <circle class="f a" cx="164" cy="138" r="5"/>
-                            <circle class="dot" cx="236" cy="113" r="5"/>
+                        <svg viewBox="0 0 240 240" aria-hidden="true">
+                            <!-- 续页：几张报告，一根线按人按时间把它们串起来 -->
+                            <defs>
+                                <clipPath id="kl-disc"><circle cx="120" cy="120" r="112"/></clipPath>
+                            </defs>
+                            <g clip-path="url(#kl-disc)">
+                                <rect width="240" height="240" fill="#cfe6df"/>
+                                <g transform="translate(0 6)">
+                                <rect x="57" y="59" width="86" height="110" rx="6" transform="rotate(-8 100 114)" fill="#eef5f2" stroke="#a9cdc1" stroke-width="1.5"/>
+                                <rect x="97" y="57" width="86" height="110" rx="6" transform="rotate(7 140 112)" fill="#f6faf8" stroke="#a9cdc1" stroke-width="1.5"/>
+                                <path d="M83 53H149L163 67V157Q163 163 157 163H83Q77 163 77 157V59Q77 53 83 53Z" fill="#ffffff" stroke="#a9cdc1" stroke-width="1.5"/>
+                                <path d="M149 53V67H163Z" fill="#dce9e4"/>
+                                <g stroke="#b5c5c1" stroke-width="5" stroke-linecap="round">
+                                    <path d="M90 76H138M90 89H150M90 102H128M90 115H146M90 128H118"/>
+                                </g>
+                                <g fill="#7db4a4">
+                                    <rect x="128" y="140" width="6" height="12" rx="1.5"/><rect x="137" y="134" width="6" height="18" rx="1.5"/><rect x="146" y="143" width="6" height="9" rx="1.5"/>
+                                </g>
+                                <path d="M-4 174C24 172 40 150 64 148C88 146 92 142 110 142C132 142 150 156 174 152C198 148 218 132 246 130" fill="none" stroke="#cc3519" stroke-width="4.5" stroke-linecap="round"/>
+                                <circle cx="64" cy="148" r="7" fill="#ffffff" stroke="#cc3519" stroke-width="3.5"/>
+                                <circle cx="110" cy="142" r="7" fill="#ffffff" stroke="#cc3519" stroke-width="3.5"/>
+                                <circle cx="174" cy="152" r="7.5" fill="#cc3519"/>
+                                </g>
+                            </g>
                         </svg>
-                        <h3><a href="https://github.com/renyijiu/kinlogue">续页</a><code>kinlogue</code></h3>
+                        <h3><a href="https://github.com/renyijiu/kinlogue" target="_blank" rel="noopener">续页</a><code>kinlogue</code></h3>
                         <p>Mac 上的家庭健康记录。把检查报告、化验单按人和时间串起来，复诊时翻得到。资料只放在自己电脑里。</p>
-                        <p class="links"><a href="https://github.com/renyijiu/kinlogue">GitHub</a><em>Swift</em></p>
+                        <p class="links"><a href="https://github.com/renyijiu/kinlogue" target="_blank" rel="noopener">GitHub</a><em>Swift</em></p>
                     </li>
                 </ul>
 
-                <p class="more">其余的在 <a href="https://github.com/renyijiu?tab=repositories">github.com/renyijiu</a>。</p>
+                <p class="more">其余的在 <a href="https://github.com/renyijiu?tab=repositories" target="_blank" rel="noopener">github.com/renyijiu</a>。</p>
             </div>
         </section>
     </main>
 
     <footer class="foot">
         <p class="motto" lang="en">All or nothing, Now or never</p>
-        <p>2018 年做的第一版，2026 年 10 月重写。© renyijiu</p>
+        <p>2018 年做的第一版，2026 年 11 月重写。© renyijiu</p>
     </footer>
 
     <script type="text/javascript">
         /*
         *   created_at: 2018-01-28
-        *   updated_at: 2026-10-14
+        *   updated_at: 2026-11-11
         *   author: renyijiu
         */
 
@@ -953,6 +1138,2050 @@
                 bind(li, i);
                 bind(pin, i);
             }
+        })();
+    </script>
+    <script>
+        /*
+        *   上面的页面在有 WebGL 的时候变成一张桌子：字印在桌面上，去过的每个城市是一颗玻璃弹珠。
+        *   内容全部从上面的 HTML 里读，改页面就行，这里不用动。
+        */
+        (function () {
+            'use strict';
+
+            var doc = document, root = doc.documentElement, body = doc.body;
+            var RM = !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+            var PI = Math.PI;
+            function T() { return performance.now() / 1000; }
+            function clamp(v, a, b) { return v < a ? a : v > b ? b : v; }
+            function $(s, r) { return (r || doc).querySelector(s); }
+            function $$(s, r) { return Array.prototype.slice.call((r || doc).querySelectorAll(s)); }
+            function hex(s) { var n = parseInt(s.slice(1), 16); return [(n >> 16 & 255) / 255, (n >> 8 & 255) / 255, (n & 255) / 255]; }
+
+            // 弹珠的样子：玻璃对红、绿、蓝的吸收（越大越深），和里面那片花的颜色。城市比这里多就从头轮
+            var LOOKS = [
+                {glass: [0.05, 0.02, 0.05], vane: '#d63a2c'},   // 几乎透明，红花
+                {glass: [0.24, 0.04, 0.22], vane: '#f2c12e'},   // 淡绿，黄花
+                {glass: [1.50, 0.85, 0.10], vane: '#f4f1ea'},   // 钴蓝，白花
+                {glass: [0.06, 0.32, 1.20], vane: '#2c64c8'},   // 琥珀，蓝花
+                {glass: [1.00, 0.12, 0.30], vane: '#f07a2a'},   // 青绿，橙花
+                {glass: [0.06, 0.03, 0.07], vane: '#a6c84c'},   // 透明，2018 年那版的绿
+                {glass: [0.45, 1.20, 0.20], vane: '#f6d64a'},   // 紫，黄花
+                {glass: [0.14, 0.05, 0.03], vane: '#cf6262'},   // 淡水蓝，2018 年那版的红
+                {glass: [0.32, 0.32, 0.28], vane: '#47b0e6'},   // 烟灰，天蓝花
+                {glass: [0.06, 1.40, 1.00], vane: '#f4f1ea'}    // 宝石红，白花
+            ];
+            // 桌子只用浅色：和上面 :root 里浅色那组一样
+            var C = {bg: '#f1f4f7', ink: '#16191d', muted: '#646a71', line: '#dce1e6', land: '#ffffff', lit: '#fbe4de', on: '#f5c3b8', inset: '#b3bac1', accent: '#cc3519'};
+
+            // ---------------------------------------------------------------- 先看显卡行不行，不行就什么都不做
+            var cv = doc.createElement('canvas'), gl = null;
+            cv.id = 'board'; cv.setAttribute('aria-hidden', 'true');
+            try { gl = cv.getContext('webgl', {alpha: false, antialias: false, depth: false, stencil: false, failIfMajorPerformanceCaveat: true}); } catch (e) {}
+            if (!gl || typeof Path2D !== 'function') return;
+
+            // 一次最多画几颗，看显卡给多少 uniform
+            var ND = 8, NM = clamp(Math.floor(((gl.getParameter(gl.MAX_FRAGMENT_UNIFORM_VECTORS) || 64) - 14 - ND) / 4), 1, 16);
+
+            var VS = 'attribute vec2 a;void main(){gl_Position=vec4(a,0.0,1.0);}';
+            var HEAD = [
+                '#ifdef GL_FRAGMENT_PRECISION_HIGH',
+                'precision highp float;',
+                '#else',
+                'precision mediump float;',
+                '#endif'
+            ].join('\n');
+            var FS = [
+                HEAD,
+                '#define NM ' + NM,
+                '#define ND ' + ND,
+                'uniform sampler2D uA;',
+                'uniform sampler2D uB;',
+                'uniform float uMix;',
+                'uniform float uDpr;',
+                'uniform vec2 uView;',
+                'uniform vec3 uL;',
+                'uniform vec3 uLine;',
+                'uniform int uN;',
+                'uniform vec4 uP[NM];',     // x, y, 半径, 细线另一头的 x
+                'uniform vec4 uQ[NM];',     // 朝向（四元数）
+                'uniform vec4 uG[NM];',     // 玻璃吸收, 细线另一头的 y
+                'uniform vec4 uV[NM];',     // 花的颜色, 细线深浅
+                'uniform int uND;',
+                'uniform vec4 uD[ND];',     // 玻璃罩：x, y, 底的半径, 长到几成
+                'const float IOR = 1.5;',
+
+                // 桌面上印的东西（坐标是 CSS px，y 朝上）
+                'vec3 tex(vec2 p) {',
+                '  vec2 uv = vec2(p.x / uView.x, 1.0 - p.y / uView.y);',
+                '  vec3 c = texture2D(uB, uv).rgb;',
+                '  if (uMix < 1.0) c = mix(texture2D(uA, uv).rgb, c, uMix);',
+                '  return c;',
+                '}',
+                'vec3 texSharp(vec2 p) {',
+                '  float o = 0.25 / uDpr;',
+                '  return 0.25 * (tex(p + vec2(-o, -o)) + tex(p + vec2(o, -o)) + tex(p + vec2(-o, o)) + tex(p + vec2(o, o)));',
+                '}',
+                'vec3 qrot(vec4 q, vec3 v) { return v + 2.0 * cross(q.xyz, cross(q.xyz, v) + q.w * v); }',
+                'vec3 tint(vec3 g) { vec3 t = exp(-g * 1.6); return t / max(max(t.r, t.g), max(t.b, 0.05)); }',
+
+                // 桌面：印刷 × 影子 + 每颗弹珠聚起来的光
+                'vec3 table(vec2 p, vec3 alb) {',
+                '  float lh = length(uL.xy);',
+                '  vec2 sd = -uL.xy / lh;',
+                '  vec2 pd = vec2(-sd.y, sd.x);',
+                '  float cotE = lh / uL.z;',
+                '  float lit = 1.0, ink = 0.0;',
+                '  vec3 caus = vec3(0.0);',
+                '  for (int i = 0; i < NM; i++) {',
+                '    if (i >= uN) break;',
+                '    vec4 P = uP[i];',
+                '    float r = P.z;',
+                '    vec2 d = p - P.xy;',
+                '    float la = uV[i].w;',
+                '    if (la > 0.0) {',
+                '      vec2 a0 = vec2(P.w, uG[i].w);',
+                '      vec2 ba = P.xy - a0, pa = p - a0;',
+                '      float hh = clamp(dot(pa, ba) / max(dot(ba, ba), 0.0001), 0.0, 1.0);',
+                '      ink = max(ink, la * clamp(1.0 - length(pa - ba * hh) * uDpr, 0.0, 1.0));',
+                '    }',
+                '    float du = dot(d, sd), dv = dot(d, pd);',
+                '    if (du < -1.5 * r || du > 3.4 * r || abs(dv) > 1.7 * r) continue;',
+                // 影子：顺着光拉长的椭圆，越远越虚
+                '    float sa = r / uL.z;',
+                '    float q = length(vec2((du - r * cotE) / sa, dv / r));',
+                '    float soft = 0.08 + 0.34 * clamp(du / (2.4 * r), 0.0, 1.0);',
+                '    lit *= 1.0 - 0.44 * (1.0 - smoothstep(1.0 - soft, 1.0 + 0.5 * soft, q));',
+                // 贴着桌面的那一点
+                '    float c2 = dot(d, d) / (r * r);',
+                '    lit *= 1.0 - 0.18 * exp(-c2 * 3.0);',
+                // 影子远端，玻璃把光聚成一个亮斑
+                '    float ku = du - r * (0.62 + 1.08 * cotE);',
+                '    float ka = r * (0.19 + 0.08 * cotE), kb = r * 0.14;',
+                '    float e = ku * ku / (ka * ka) + dv * dv / (kb * kb);',
+                '    vec4 Q = uQ[i];',
+                '    vec3 ax = vec3(2.0 * (Q.x * Q.z + Q.w * Q.y), 2.0 * (Q.y * Q.z - Q.w * Q.x), 1.0 - 2.0 * (Q.x * Q.x + Q.y * Q.y));',
+                '    vec3 tc = tint(uG[i].rgb);',
+                '    float k = 0.75 + 0.25 * abs(dot(ax, uL));',
+                '    caus += k * (mix(tc, vec3(1.0), 0.3 * exp(-e * 2.5)) * 0.85 * exp(-e) + tc * 0.12 * exp(-e * 0.3));',
+                '  }',
+                // 玻璃罩背光那一侧的影子，和贴着桌面的一圈
+                '  for (int i = 0; i < ND; i++) {',
+                '    if (i >= uND) break;',
+                '    vec4 D = uD[i];',
+                '    float a = D.z, dr = length(p - D.xy);',
+                '    if (dr > a * 1.9 || dr < a * 0.96) continue;',
+                '    float sh = 1.0 - smoothstep(a * 0.82, a * 1.14, length(p - D.xy - sd * 0.45 * a * cotE * 0.9));',
+                '    lit *= 1.0 - 0.24 * sh * smoothstep(a * 0.97, a * 1.03, dr);',
+                '    lit *= 1.0 - 0.12 * exp(-max(dr - a, 0.0) / (0.035 * a)) * step(a, dr);',
+                '  }',
+                '  alb = mix(alb, uLine, ink * 0.8);',
+                '  return alb * (lit + caus);',
+                '}',
+
+                // 屋子：头顶亮一些，四周暗一些，光那边有一扇窗
+                'vec3 env(vec3 R, float soft) {',
+                '  vec3 c = mix(vec3(0.33, 0.36, 0.42), vec3(0.88, 0.92, 0.97), smoothstep(-0.02, 0.9, R.z));',
+                '  c = mix(c, vec3(0.86, 0.9, 0.95), 1.0 - smoothstep(-0.35, -0.02, R.z));',
+                '  vec3 wz = uL;',
+                '  vec3 wx = normalize(vec3(1.0, 0.0, 0.0) - wz * wz.x);',
+                '  vec3 wy = cross(wz, wx);',
+                '  float a = dot(R, wz);',
+                '  if (a > 0.3) {',
+                '    vec2 q = vec2(dot(R, wx), dot(R, wy)) / a;',
+                '    vec2 b = abs(q) - vec2(0.2, 0.15);',
+                '    float sdf = length(max(b, 0.0)) + min(max(b.x, b.y), 0.0) - 0.1;',
+                '    c += 16.0 * (1.0 - 2.5 * soft) * (1.0 - smoothstep(-0.08 - soft, 0.04 + soft, sdf)) * (0.75 + 0.25 * smoothstep(-0.3, 0.3, q.y));',
+                '    c += 2.0 * exp(-max(sdf, 0.0) * 8.0 / (1.0 + 6.0 * soft));',
+                '  }',
+                '  c += 0.6 * pow(max(a, 0.0), 6.0);',
+                '  return c;',
+                '}',
+
+                // 里面那片三瓣的花：在弹珠自己的坐标里沿光线走，找光线穿过花瓣的地方
+                // 花瓣是绕 z 轴拧过的薄片：角度 = 拧的角度 + k * 120°
+                'const float VW = 0.5, VZ = 0.84;',
+                'vec4 vane(vec3 a, vec3 b, vec4 Q, vec3 vc, vec3 g, float idx, float px) {',
+                '  vec3 dir = b - a;',
+                '  float t0 = 0.0, t1 = 1.0;',
+                '  float A = dot(dir.xy, dir.xy), B = dot(a.xy, dir.xy), C = dot(a.xy, a.xy) - VW * VW;',
+                '  if (A > 0.000001) {',
+                '    float disc = B * B - A * C;',
+                '    if (disc <= 0.0) return vec4(0.0);',
+                '    float s = sqrt(disc);',
+                '    t0 = max(t0, (-B - s) / A); t1 = min(t1, (-B + s) / A);',
+                '  } else if (C > 0.0) return vec4(0.0);',
+                '  if (abs(dir.z) > 0.00001) {',
+                '    float za = (-VZ - a.z) / dir.z, zb = (VZ - a.z) / dir.z;',
+                '    t0 = max(t0, min(za, zb)); t1 = min(t1, max(za, zb));',
+                '  } else if (abs(a.z) > VZ) return vec4(0.0);',
+                '  if (t1 <= t0) return vec4(0.0);',
+                '  float tw = (mod(idx, 2.0) < 0.5 ? 1.0 : -1.0) * (1.1 + 0.25 * mod(idx, 3.0));',
+                '  float L = length(dir);',
+                '  vec3 rd = dir / L;',
+                '  vec3 acc = vec3(0.0);',
+                '  float al = 0.0;',
+                // 三瓣在中间合成一根脊：光线离轴最近的地方
+                '  float ts = A > 0.000001 ? clamp(-B / A, t0, t1) : t0;',
+                '  vec3 sa = a + dir * ts;',
+                '  float spine = (1.0 - smoothstep(0.018, 0.018 + px * 1.5, length(sa.xy))) * (1.0 - smoothstep(VZ * 0.8, VZ * 0.92, abs(sa.z)));',
+                '  bool spineDone = spine < 0.001;',
+                '  float ps = 0.0, pc = 0.0, pt = t0;',
+                '  for (int k = 0; k <= 24; k++) {',
+                '    float t = t0 + (t1 - t0) * float(k) / 24.0;',
+                '    if (!spineDone && t >= ts) {',
+                '      spineDone = true;',
+                '      vec3 c = vc * 0.9 * exp(-g * ts * L);',
+                '      acc += (1.0 - al) * spine * c;',
+                '      al += (1.0 - al) * spine;',
+                '    }',
+                '    vec3 s = a + dir * t;',
+                '    float th = 3.0 * (atan(s.y, s.x + 0.000001) - tw * s.z);',
+                '    float sn = sin(th), cs = cos(th);',
+                // 侧着看花瓣的时候，光线贴着薄片走，按厚度算
+                '    float rs = length(s.xy);',
+                '    float zs = s.z / VZ;',
+                '    float rms = VW * pow(max(1.0 - zs * zs, 0.0), 0.8);',
+                '    float fl = rs * abs(sin((mod(th + 3.1415927, 6.2831853) - 3.1415927) / 3.0));',
+                '    float as = atan(s.y, s.x + 0.000001);',
+                '    float gz = 1.0 - smoothstep(0.08, 0.3, abs(dot(rd, normalize(vec3(-sin(as), cos(as), -tw * rs)))));',
+                '    float slab = gz * smoothstep(0.03, 0.06, rs) * (1.0 - smoothstep(0.012, 0.03, fl)) * (1.0 - smoothstep(rms - px, rms + px * 0.5, rs));',
+                '    if (slab > 0.001) {',
+                '      float o = slab * (1.0 - exp(-L * (t1 - t0) * 2.2));',
+                '      vec3 c = vc * 0.85 * exp(-g * t * L);',
+                '      acc += (1.0 - al) * o * c;',
+                '      al += (1.0 - al) * o;',
+                '    }',
+                '    if (k > 0 && sn * ps <= 0.0 && cs + pc > 0.0 && rs > 0.035) {',
+                '      float den = ps - sn;',
+                '      float tc = mix(pt, t, abs(den) > 0.000001 ? ps / den : 0.5);',
+                '      vec3 h = a + dir * tc;',
+                '      float zz = h.z / VZ;',
+                '      float rmax = VW * pow(max(1.0 - zz * zz, 0.0), 0.8);',
+                '      float rho = length(h.xy);',
+                '      float cover = 1.0 - smoothstep(rmax - px * 1.5, rmax + px * 0.5, rho);',
+                '      if (cover > 0.0) {',
+                '        float an = atan(h.y, h.x + 0.000001);',
+                '        vec3 n = normalize(vec3(-sin(an), cos(an), -tw * rho));',
+                '        float ci = abs(dot(rd, n));',
+                '        float edge = smoothstep(0.0, 0.35, rmax - rho);',
+                '        float o = cover * (1.0 - exp(-(0.75 + 0.6 * edge) / max(ci, 0.12)));',
+                '        float lam = abs(dot(qrot(Q, n), uL));',
+                '        vec3 c = vc * (0.42 + 0.7 * lam) * (0.82 + 0.18 * edge) + 0.25 * pow(lam, 24.0);',
+                '        c *= exp(-g * tc * L);',
+                '        acc += (1.0 - al) * o * c;',
+                '        al += (1.0 - al) * o;',
+                '      }',
+                '    }',
+                '    ps = sn; pc = cs; pt = t;',
+                '  }',
+                '  return vec4(acc, al);',
+                '}',
+
+                // 一颗玻璃球：进去折一次，出来折一次，再落到桌面上
+                'vec3 marble(vec2 p, vec4 P, vec4 Q, vec4 G, vec4 V, float idx, out float cov) {',
+                '  float r = P.z;',
+                '  vec2 d = p - P.xy;',
+                '  float dl = length(d);',
+                '  cov = clamp((r - dl) * uDpr + 0.5, 0.0, 1.0);',
+                '  float dc = min(dl, r * 0.997);',
+                '  vec2 dd = dl > 0.0001 ? d * (dc / dl) : vec2(0.0);',
+                '  float hz = sqrt(max(r * r - dc * dc, 0.0));',
+                '  vec3 C = vec3(P.xy, r);',
+                '  vec3 N = vec3(dd, hz) / r;',
+                '  vec3 P1 = vec3(P.xy + dd, r + hz);',
+                '  vec3 I = vec3(0.0, 0.0, -1.0);',
+                '  float F = 0.04 + 0.96 * pow(1.0 - N.z, 5.0);',
+                '  vec3 refl = env(reflect(I, N), 0.0);',
+                '  vec3 T1 = refract(I, N, 1.0 / IOR);',
+                '  float len = -2.0 * dot(P1 - C, T1);',
+                '  vec3 P2 = P1 + T1 * len;',
+                '  vec3 N2 = (P2 - C) / r;',
+                '  vec3 T2 = refract(T1, -N2, IOR);',
+                '  if (dot(T2, T2) < 0.0001) T2 = reflect(T1, -N2);',
+                '  vec3 back = env(T2, 0.0);',
+                '  if (T2.z < 0.0) {',
+                '    vec2 hit = P2.xy - T2.xy * (P2.z / T2.z);',
+                '    back = mix(back, table(hit, tex(hit)), smoothstep(0.0, 0.2, -T2.z));',
+                '  }',
+                '  back *= exp(-G.rgb * len / r) * (1.0 - F);',
+                '  vec4 iq = vec4(-Q.xyz, Q.w);',
+                '  vec4 vn = vane(qrot(iq, N), qrot(iq, N2), Q, V.rgb, G.rgb, idx, 1.0 / (uDpr * r));',
+                '  vec3 col = vn.rgb + (1.0 - vn.a) * back;',
+                // 背光那一侧，光在玻璃里聚起来
+                '  vec2 lh = normalize(uL.xy);',
+                '  float side = dl > 0.0001 ? dot(d / dl, -lh) : 0.0;',
+                '  float rn = dc / r;',
+                '  vec3 tg = tint(G.rgb);',
+                '  col += tg * 0.5 * smoothstep(-0.1, 1.0, side) * exp(-pow((rn - 0.72) / 0.2, 2.0));',
+                // 光在后壁反射一次，从对面出来的那个小亮点
+                '  vec2 sp = d / r + lh * 0.66;',
+                '  col += mix(tg, vec3(1.0), 0.5) * 0.55 * exp(-dot(sp, sp) / 0.012);',
+                '  return refl * F + col * (1.0 - F);',
+                '}',
+
+                // 玻璃罩：平底的球冠，高是底半径的 0.45；从弯的顶面折进去，直接落在底下印的画上
+                'vec3 dome(vec2 p, vec4 D, out float cov) {',
+                '  float a = D.z, hh = 0.45 * a, R = (a * a + hh * hh) / (2.0 * hh), zc = hh - R;',
+                '  vec2 d = p - D.xy;',
+                '  float dl = length(d);',
+                '  cov = clamp((a - dl) * uDpr + 0.5, 0.0, 1.0);',
+                '  float dc = min(dl, a * 0.999);',
+                '  vec2 dd = dl > 0.0001 ? d * (dc / dl) : vec2(0.0);',
+                '  float z = zc + sqrt(max(R * R - dc * dc, 0.0));',
+                '  vec3 N = vec3(dd, z - zc) / R;',
+                '  vec3 I = vec3(0.0, 0.0, -1.0);',
+                '  float F = 0.04 + 0.96 * pow(1.0 - N.z, 5.0);',
+                '  vec3 refl = env(reflect(I, N), 0.08);',
+                '  vec3 Tr = refract(I, N, 1.0 / IOR);',
+                '  float tl = z / max(-Tr.z, 0.05);',
+                '  vec2 hit = D.xy + dd + Tr.xy * tl;',
+                '  float rn = dc / a;',
+                // 玻璃很淡，只有边上那一圈带点绿
+                '  vec3 col = table(hit, tex(hit)) * exp(-vec3(0.06, 0.015, 0.05) * tl / a - vec3(0.14, 0.02, 0.1) * smoothstep(0.8, 1.0, rn));',
+                // 背光那一侧，光在边上聚成一道细细的亮弧
+                '  vec2 lh = normalize(uL.xy);',
+                '  float side = dl > 0.0001 ? dot(d / dl, -lh) : 0.0;',
+                '  col += vec3(1.0, 0.98, 0.93) * 0.55 * smoothstep(0.15, 1.0, side) * exp(-pow((rn - 0.935) / 0.03, 2.0));',
+                '  col *= 1.0 - 0.18 * smoothstep(0.965, 1.0, rn);',
+                '  return refl * F + col * (1.0 - F);',
+                '}',
+
+                'float ign(vec2 p) { return fract(52.9829189 * fract(dot(p, vec2(0.06711056, 0.00583715)))); }',
+
+                'void main() {',
+                '  vec2 p = gl_FragCoord.xy / uDpr;',
+                '  vec4 P = vec4(0.0), Q = vec4(0.0, 0.0, 0.0, 1.0), G = vec4(0.0), V = vec4(0.0);',
+                '  float idx = -1.0, best = 0.0;',
+                '  for (int i = 0; i < NM; i++) {',
+                '    if (i >= uN) break;',
+                '    vec4 Pi = uP[i];',
+                '    vec2 d = p - Pi.xy;',
+                '    float rr = Pi.z + 1.0 / uDpr;',
+                '    float m = rr * rr - dot(d, d);',
+                '    if (m > best) { best = m; P = Pi; Q = uQ[i]; G = uG[i]; V = uV[i]; idx = float(i); }',
+                '  }',
+                '  vec3 col;',
+                '  float cov;',
+                '  if (idx >= 0.0) {',
+                '    vec3 mc = marble(p, P, Q, G, V, idx, cov);',
+                '    col = cov < 1.0 ? mix(table(p, texSharp(p)), mc, cov) : mc;',
+                '  } else {',
+                '    vec4 Dm = vec4(0.0);',
+                '    bool hasD = false;',
+                '    for (int i = 0; i < ND; i++) {',
+                '      if (i >= uND) break;',
+                '      vec4 D = uD[i];',
+                '      float rr = D.z + 1.0 / uDpr;',
+                '      if (D.z > 0.5 && dot(p - D.xy, p - D.xy) < rr * rr) { Dm = D; hasD = true; }',
+                '    }',
+                '    if (hasD) {',
+                '      vec3 dc = dome(p, Dm, cov);',
+                '      col = cov < 1.0 ? mix(table(p, texSharp(p)), dc, cov) : dc;',
+                '    } else col = table(p, texSharp(p));',
+                '  }',
+                '  gl_FragColor = vec4(col + (ign(gl_FragCoord.xy) - 0.5) / 255.0, 1.0);',
+                '}'
+            ].join('\n');
+
+            // 印刷换了的时候，把正在淡入淡出的那一刻先存下来
+            var BLIT = [
+                HEAD,
+                'uniform sampler2D uA;',
+                'uniform sampler2D uB;',
+                'uniform float uMix;',
+                'uniform vec2 uSz;',
+                'void main() {',
+                '  vec2 uv = gl_FragCoord.xy / uSz;',
+                '  gl_FragColor = vec4(mix(texture2D(uA, uv).rgb, texture2D(uB, uv).rgb, uMix), 1.0);',
+                '}'
+            ].join('\n');
+
+            function program(fsrc, names) {
+                function sh(type, src) {
+                    var s = gl.createShader(type);
+                    gl.shaderSource(s, src); gl.compileShader(s);
+                    return gl.getShaderParameter(s, gl.COMPILE_STATUS) ? s : null;
+                }
+                var v = sh(gl.VERTEX_SHADER, VS), f = sh(gl.FRAGMENT_SHADER, fsrc);
+                if (!v || !f) return null;
+                var p = gl.createProgram();
+                gl.attachShader(p, v); gl.attachShader(p, f);
+                gl.bindAttribLocation(p, 0, 'a');
+                gl.linkProgram(p);
+                if (!gl.getProgramParameter(p, gl.LINK_STATUS)) return null;
+                var u = {p: p};
+                names.forEach(function (k) { u[k] = gl.getUniformLocation(p, k); });
+                return u;
+            }
+            var PR = program(FS, ['uA', 'uB', 'uMix', 'uDpr', 'uView', 'uL', 'uLine', 'uN', 'uP', 'uQ', 'uG', 'uV', 'uND', 'uD']);
+            var PB = program(BLIT, ['uA', 'uB', 'uMix', 'uSz']);
+            if (!PR || !PB) return;
+            gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+            gl.enableVertexAttribArray(0);
+            gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
+            var fbo = gl.createFramebuffer();
+
+            // ---------------------------------------------------------------- 从页面里读内容
+            var css = getComputedStyle(root);
+            var SANS = css.getPropertyValue('--sans').trim() || '-apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif';
+            var MONO = css.getPropertyValue('--mono').trim() || 'ui-monospace, Menlo, Consolas, monospace';
+            function text(el) { return el ? el.textContent.replace(/\s+/g, ' ').trim() : ''; }
+            function anchor(a) { return a ? {text: text(a), href: a.getAttribute('href'), target: a.getAttribute('target'), rel: a.getAttribute('rel')} : null; }
+            // 一段话拆成一截一截：哪些是链接，哪些不能断行（.nb）
+            function runs(el) {
+                var out = [], nb = 0;
+                if (!el) return out;
+                (function walk(n, a, nbId) {
+                    if (n.nodeType === 3) {
+                        var t = n.nodeValue.replace(/\s+/g, ' ');
+                        if (t) out.push({text: t, a: a, nb: nbId});
+                        return;
+                    }
+                    if (n.nodeType !== 1) return;
+                    if (n.tagName.toLowerCase() === 'a') a = anchor(n);
+                    if (n.classList.contains('nb')) nbId = ++nb;
+                    for (var c = n.firstChild; c; c = c.nextSibling) walk(c, a, nbId);
+                })(el, null, 0);
+                if (out.length) {
+                    out[0].text = out[0].text.replace(/^ /, '');
+                    out[out.length - 1].text = out[out.length - 1].text.replace(/ $/, '');
+                }
+                return out.filter(function (s) { return s.text; });
+            }
+            var SITE = {
+                home: anchor($('.top .name')) || {text: 'renyijiu', href: './'},
+                nav: $$('.top nav a').map(anchor),
+                h1: runs($('.intro h1')),
+                intro: runs($('.intro p')),
+                motto: text($('.foot .motto')),
+                foot: text($('.foot p:not(.motto)')),
+                placesTitle: text($('#places h2')),
+                caption: text($('#places figcaption')),
+                alsoTitle: text($('#places .also h3')),
+                codeTitle: text($('#code h2')),
+                more: runs($('#code .more'))
+            };
+            // 写了两句话的城市是弹珠，还没写的是小点
+            var CITIES = [], MINOR = [];
+            $$('#places li[data-lon]').forEach(function (li) {
+                var p = {lon: +li.getAttribute('data-lon'), lat: +li.getAttribute('data-lat'), prov: li.getAttribute('data-in') || ''};
+                var s = $('strong', li);
+                if (s) { p.name = text(s); p.notes = $$('p', li).map(text); CITIES.push(p); }
+                else { p.name = text(li); MINOR.push(p); }
+            });
+            var mapSvg = $('#places svg.map');
+            var VB = [756, 584];
+            if (mapSvg && mapSvg.viewBox && mapSvg.viewBox.baseVal && mapSvg.viewBox.baseVal.width) VB = [mapSvg.viewBox.baseVal.width, mapSvg.viewBox.baseVal.height];
+            var PROV = mapSvg ? $$('path[data-name]', mapSvg).map(function (p) {
+                var bb = null;
+                try { bb = p.getBBox(); } catch (e) {}
+                return {name: p.getAttribute('data-name'), path: new Path2D(p.getAttribute('d')), bb: bb && bb.width ? {x: bb.x, y: bb.y, width: bb.width, height: bb.height} : null};
+            }) : [];
+            var FRAME = mapSvg ? $$('path.frame', mapSvg).map(function (p) { return new Path2D(p.getAttribute('d')); }) : [];
+            var LIT = {};
+            CITIES.concat(MINOR).forEach(function (p) { LIT[p.prov] = 1; });
+            // 和上面那段小脚本一样：x = (lon - 72.5) * 12, y = (54 - lat) * 16
+            function proj(lon, lat) { return [(lon - 72.5) * 12, (54 - lat) * 16]; }
+            var WORKS = $$('#code .works > li').map(function (li) {
+                return {svg: $('svg', li), name: anchor($('h3 a', li)) || {text: text($('h3', li))}, repo: text($('h3 code', li)),
+                    desc: text($('p:not(.links)', li)), links: $$('.links a', li).map(anchor), lang: text($('.links em', li)), img: null};
+            });
+
+            // 每个项目的圆形小画：直接把页面里那张 SVG 画成图片
+            function loadSketches() {
+                WORKS.forEach(function (w) {
+                    if (!w.svg) return;
+                    var sv = w.svg.cloneNode(true), vb = w.svg.viewBox && w.svg.viewBox.baseVal;
+                    sv.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+                    if (vb && vb.width) { sv.setAttribute('width', vb.width); sv.setAttribute('height', vb.height); }
+                    sv.removeAttribute('aria-hidden');
+                    var img = new Image();
+                    img.onload = function () { w.img = img; imgsLoaded++; if (ON && scene === 'code') refresh(0.25); };
+                    img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(new XMLSerializer().serializeToString(sv));
+                });
+            }
+
+            // ---------------------------------------------------------------- 桌子和文档之间切换
+            var uiEl = doc.createElement('div'), tag = doc.createElement('div'), say = doc.createElement('p');
+            uiEl.id = 'ui'; tag.id = 'tag'; tag.setAttribute('aria-hidden', 'true');
+            say.id = 'say'; say.setAttribute('aria-live', 'polite');
+            // 文档页脚里回到桌子的按钮
+            var toTable = doc.createElement('button');
+            toTable.type = 'button'; toTable.id = 'to-table'; toTable.hidden = true;
+            var footP = $('.foot p:not(.motto)');
+            (footP || $('.foot') || body).appendChild(toTable);
+            var ON = false, glDead = false, perfOut = false, fits = false, probed = false, RSCALE = 1;
+            var VIEW_KEY = 'renyijiu-view', SLOW_KEY = 'renyijiu-slow';
+            function stored(k, session) { try { return (session ? sessionStorage : localStorage).getItem(k); } catch (e) { return null; } }
+            function store(k, v, session) {
+                try { var st = session ? sessionStorage : localStorage; if (v === null) st.removeItem(k); else st.setItem(k, v); } catch (e) {}
+            }
+            var choice = stored(VIEW_KEY);
+            if (stored(SLOW_KEY, true)) perfOut = true;
+            function docLinks() { return $$('body > header a, body > main a'); }
+            function available() { return !glDead && !perfOut && fits; }
+            function update() {
+                var want = available() && choice !== 'text';
+                if (want && !ON) enter();
+                else if (!want && ON) leave();
+                toTable.hidden = !(available() && !ON);
+            }
+            function chooseText() {
+                choice = 'text'; store(VIEW_KEY, 'text');
+                update();
+                if (!ON && !toTable.hidden) toTable.focus({preventScroll: true});
+            }
+            function chooseTable() {
+                choice = null; store(VIEW_KEY, null);
+                update();
+                if (ON && uiMap.text) uiMap.text.focus({preventScroll: true});
+            }
+            cv.addEventListener('webglcontextlost', function () { glDead = true; update(); });
+
+            // ---------------------------------------------------------------- 状态
+            var W = 1, H = 1, dpr = 1, R0 = 40, SC = 1, MG = 32, colL = 0, colR = 1, colW = 1, narrow = false;
+            var HB = 60, BT = 740;               // 顶上那一行的下沿，底下那一行的上沿
+            var MAP = null, PTS = [], MPTS = [];
+            var CH = null, LAY = null;
+            var scene = 'home', sel = -1, hot = null, alsoHot = -1, soundOn = false;
+            var M = [], held = null, hover = null;
+            var hold = {x: 0, y: 0, ox: 0, oy: 0};
+            var ptr = {x: 0, y: 0, vx: 0, vy: 0, t: 0, has: false, mouse: true, downX: 0, downY: 0, downT: 0, moved: 0};
+            var lean = {x: 0, y: 0, tx: 0, ty: 0};
+            var tilt = {on: false, gx: 0, gy: 0, bx: null, by: null, t: 0};
+            var lineK = 0, suppress = false, hoverSelT = 0;
+            var KEEP = [], KEEPSIG = '', FREE = {}, RS = 40;   // 字占的地方；按半径算好的空地；这一幕弹珠的大小
+            var DOMES = [];   // 写过的东西：每个项目一只玻璃罩 {x, y, a, from, to, t0}
+            var raf = 0, last = 0, acc = 0;
+            var LV = [0, 0, 1], LINE = hex(C.muted);
+
+            var VON = 180, STEP = 1 / 120, KL = 0.55, KS = 55, CS = 9.2, KH = 1100, DH = 60, E_BALL = 0.9, E_WALL = 0.7;
+            function CF() { return 190 * SC; }
+
+            // ---------------------------------------------------------------- 排字
+            var mctx = doc.createElement('canvas').getContext('2d');
+            function F(st) { return (st.it ? 'italic ' : '') + (st.wt || 400) + ' ' + st.size + 'px ' + (st.mono ? MONO : SANS); }
+            function mw(t, st) { mctx.font = F(st); return mctx.measureText(t).width; }
+            var NO_START = '，。、；：？！）」』》〉…,.;:?!)%';
+            var NO_END = '（「『《〈(';
+            // 拆成不能再断开的小块：一个汉字、一个英文词、一个链接、一个 .nb
+            function tokens(segs, st) {
+                var out = [];
+                function add(tk, s, t) {
+                    var last = tk.segs[tk.segs.length - 1];
+                    if (last && last.a === s.a) last.text += t; else tk.segs.push({text: t, a: s.a});
+                }
+                segs.forEach(function (s) {
+                    var prev = out[out.length - 1];
+                    if (s.nb || s.a) {
+                        var key = s.nb ? 'nb' + s.nb : null;
+                        if (prev && key && prev.key === key) { add(prev, s, s.text); return; }
+                        var tk = {segs: [], key: key};
+                        add(tk, s, s.text);
+                        if (prev && NO_START.indexOf(s.text[0]) >= 0) add(prev, s, s.text);
+                        else out.push(tk);
+                        return;
+                    }
+                    (s.text.match(/[\x21-\x7e]+ ?| +|[\s\S]/gu) || []).forEach(function (t) {
+                        var p = out[out.length - 1], lastCh = p ? p.segs[p.segs.length - 1].text.slice(-1) : '';
+                        if (p && (NO_START.indexOf(t[0]) >= 0 || NO_END.indexOf(lastCh) >= 0 || t[0] === ' ')) add(p, s, t);
+                        else { var tk = {segs: []}; add(tk, s, t); out.push(tk); }
+                    });
+                });
+                out.forEach(function (tk) {
+                    tk.w = 0;
+                    tk.segs.forEach(function (sg) { sg.w = mw(sg.text, st); tk.w += sg.w; });
+                    var tail = tk.segs[tk.segs.length - 1].text.match(/ +$/);
+                    tk.sp = tail ? mw(tail[0], st) : 0;
+                });
+                return out;
+            }
+            function wrap(toks, maxW) {
+                var lines = [], cur = [], w = 0;
+                toks.forEach(function (tk) {
+                    if (cur.length && w + tk.w - tk.sp > maxW) { lines.push(cur); cur = []; w = 0; }
+                    cur.push(tk); w += tk.w;
+                });
+                if (cur.length) lines.push(cur);
+                return lines;
+            }
+            // 每行差不多长（和 text-wrap: balance 一个意思）
+            function balance(toks, maxW) {
+                var n = wrap(toks, maxW).length;
+                if (n < 2) return wrap(toks, maxW);
+                var lo = 0, hi = maxW;
+                for (var i = 0; i < 18; i++) { var mid = (lo + hi) / 2; if (wrap(toks, mid).length <= n) hi = mid; else lo = mid; }
+                return wrap(toks, hi);
+            }
+            // 排好的行变成一段一段要印的字
+            function place(lines, x, base, lh, st, color, linkStyle, out) {
+                lines.forEach(function (line, k) {
+                    var cx = x;
+                    line.forEach(function (tk) {
+                        tk.segs.forEach(function (sg) {
+                            var t = sg.text;
+                            if (cx === x) t = t.replace(/^ +/, '');
+                            var s = {text: t, x: cx, base: base + k * lh, st: st, color: color, w: sg.w};
+                            if (sg.a) {
+                                s.a = sg.a; s.id = 'a:' + sg.a.href + ':' + sg.a.text;
+                                if (linkStyle) { s.color = linkStyle.color || color; s.ul = linkStyle.ul; }
+                            }
+                            out.push(s);
+                            cx += sg.w;
+                        });
+                    });
+                });
+                return lines.length;
+            }
+            // 印出来的链接，盖一个真的 <a>
+            function linkHits(spans, hits) {
+                spans.forEach(function (s) {
+                    if (!s.a) return;
+                    var h = s.st.size;
+                    hits.push({id: s.id + ':' + Math.round(s.base), tag: 'a', a: s.a, hotId: s.id, box: {x: s.x - 3, y: s.base - h * 1.02, w: s.w + 6, h: h * 1.34}});
+                });
+            }
+
+            // ---------------------------------------------------------------- 每一幕都有的：名字、导航、格言、声音
+            var NAME_ST = {wt: 700, size: 17}, NAV_ST = {size: 15}, SMALL = {size: 14};
+            var TEXT_BTN = '文字版', TABLE_BTN = '弹珠版';
+            toTable.textContent = TABLE_BTN;
+            toTable.addEventListener('click', chooseTable);
+            function soundText() { return soundOn ? '声音：开' : '声音：关'; }
+            // 底下一行：格言在左，文字版和声音在右
+            function bottomRow() {
+                var st = soundText(), sw = mw(st, SMALL), tw = mw(TEXT_BTN, SMALL);
+                return {st: st, sw: sw, sx: colR - sw, tw: tw, tx: colR - sw - 20 - tw, mw: mw(SITE.motto, {it: true, size: 14})};
+            }
+            function layChrome() {
+                var o = {spans: [], hits: []}, base = HB - 16;
+                var nx = colL + 8 + 8.8, nw = mw(SITE.home.text, NAME_ST);
+                o.dot = {x: colL + 4, y: base - 5.6};
+                o.spans.push({text: SITE.home.text, x: nx, base: base, st: NAME_ST, color: C.ink, id: 'home', w: nw});
+                o.hits.push({id: 'home', tag: 'a', a: SITE.home, hotId: 'home', home: true, box: {x: colL - 6, y: base - 21, w: nw + 30, h: 30}});
+                var gap = narrow ? 16 : 24, x = colR + gap;
+                SITE.nav.forEach(function (a) { x -= mw(a.text, NAV_ST) + gap; });
+                SITE.nav.forEach(function (a, i) {
+                    var w = mw(a.text, NAV_ST), cur = a.href === '#' + scene;
+                    o.spans.push({text: a.text, x: x, base: base, st: NAV_ST, color: cur ? C.ink : C.muted, id: 'nav' + i, w: w});
+                    o.hits.push({id: 'nav' + i, tag: 'a', a: a, hotId: 'nav' + i, box: {x: x - 6, y: base - 19, w: w + 12, h: 28}});
+                    x += w + gap;
+                });
+                var navX = colR + gap - SITE.nav.reduce(function (s, a) { return s + mw(a.text, NAV_ST) + gap; }, 0);
+                var bb = BT + 22, row = bottomRow();
+                var motto = {it: true, size: 14};
+                o.spans.push({text: SITE.motto, x: colL, base: bb, st: motto, color: C.ink, w: row.mw});
+                o.spans.push({text: TEXT_BTN, x: row.tx, base: bb, st: SMALL, color: C.muted, id: 'text', w: row.tw});
+                o.hits.push({id: 'text', tag: 'button', label: TEXT_BTN, hotId: 'text', act: chooseText, box: {x: row.tx - 8, y: bb - 19, w: row.tw + 16, h: 28}});
+                o.spans.push({text: row.st, x: row.sx, base: bb, st: SMALL, color: C.muted, id: 'sound', w: row.sw});
+                o.hits.push({id: 'sound', tag: 'button', label: row.st, pressed: soundOn, hotId: 'sound', act: toggleSound, box: {x: row.sx - 8, y: bb - 19, w: row.sw + 16, h: 28}});
+                // 名字和导航挤不下、底下一行挤不下，都算放不下
+                o.fits = nx + nw + gap <= navX && colL + row.mw + 20 <= row.tx && BT - HB > 200;
+                return o;
+            }
+
+            // ---------------------------------------------------------------- 首页
+            function layHome() {
+                var o = {spans: [], hits: []};
+                var size = narrow ? Math.min(W * 0.09, colW / 11.4) : clamp(W * 0.05, 30, 96);
+                size = Math.min(size, (BT - HB) * 0.62 / (4 * 1.32));
+                var st = {wt: 600, size: size}, lh = size * 1.32, maxW = Math.min(colW, size * 17);
+                var l1 = balance(tokens(SITE.h1, st), maxW), l2 = balance(tokens(SITE.intro, st), maxW);
+                var n = l1.length + l2.length;
+                var top = Math.max(HB + 24, (HB + BT) * 0.47 - n * lh / 2);
+                var base = top + lh * 0.5 + size * 0.36;
+                var ul = {color: C.line, hot: C.accent, off: 0.16, th: 0.08};
+                place(l1, colL, base, lh, st, C.ink, {color: C.ink, ul: ul}, o.spans);
+                place(l2, colL, base + l1.length * lh, lh, st, C.muted, {color: C.ink, ul: ul}, o.spans);
+                linkHits(o.spans, o.hits);
+                // 页脚那句话：放得下就跟在格言后面，放不下就在格言上面
+                var fw = mw(SITE.foot, SMALL), row = bottomRow(), bb = BT + 22, inRow = colL + row.mw + 32 + fw + 24 <= row.tx;
+                if (inRow) o.spans.push({text: SITE.foot, x: colL + row.mw + 32, base: bb, st: SMALL, color: C.muted, w: fw});
+                else o.spans.push({text: SITE.foot, x: colL, base: bb - 22, st: SMALL, color: C.muted, w: fw});
+                o.fits = size >= 22 && fw <= colW && top + n * lh <= (inRow ? BT - 4 : BT - 22 - 16);
+                return o;
+            }
+
+            // ---------------------------------------------------------------- 走过的地方
+            var AR = VB[0] / VB[1];
+            // 地图摆在哪儿，只跟窗口大小有关
+            function placesGeom() {
+                var g = {land: W >= 760 && W >= H * 1.05};
+                var top0 = HB + (narrow ? 12 : 22), bot0 = BT - 10;
+                if (g.land) {
+                    g.fs = H < 760 ? 14 : H >= 1000 && W >= 1600 ? 16 : 15;
+                    var gap = clamp(colW * 0.045, 28, 60), listW = clamp(colW * 0.3, 270, 380);
+                    var areaW = colW - listW - gap, mh = Math.min(areaW / AR, bot0 - top0), nl, belowH;
+                    for (var k = 0; k < 3; k++) {
+                        nl = alsoLines(mh * AR, 13).length;
+                        belowH = 14 * 1.6 + 16 + 13 * 1.6 + 6 + nl * 13 * 1.7;
+                        mh = Math.min(areaW / AR, bot0 - top0 - belowH - 12);
+                    }
+                    g.w = mh * AR; g.h = mh; g.x = colL;
+                    g.y = top0 + Math.max(0, (bot0 - top0 - (mh + 12 + belowH)) * 0.45);
+                    g.lx = colL + g.w + gap; g.lw = colR - g.lx;
+                    g.top0 = top0; g.bot0 = bot0;
+                } else {
+                    g.w = colW; g.h = colW / AR;
+                    if (g.h > (bot0 - top0) * 0.52) { g.h = (bot0 - top0) * 0.52; g.w = g.h * AR; }
+                    g.x = colL + (colW - g.w) / 2; g.y = top0;
+                    g.top0 = top0; g.bot0 = bot0;
+                }
+                g.s = g.w / VB[0];
+                return g;
+            }
+            function mapXY(lon, lat) { var q = proj(lon, lat); return {x: MAP.x + q[0] * MAP.s, y: MAP.y + q[1] * MAP.s}; }
+            // 还没来得及写的那些名字，排成几行
+            function alsoLines(maxW, size) {
+                var st = {size: size}, gap = size * 1.1, lines = [], cur = [], x = 0;
+                MINOR.forEach(function (p, i) {
+                    var w = mw(p.name, st);
+                    if (cur.length && x + w > maxW) { lines.push(cur); cur = []; x = 0; }
+                    cur.push({i: i, x: x, w: w}); x += w + gap;
+                });
+                if (cur.length) lines.push(cur);
+                return lines;
+            }
+            function layAlso(o, x, y, maxW) {
+                var tst = {wt: 500, size: 13}, st = {size: 13}, lh = 13 * 1.7;
+                o.spans.push({text: SITE.alsoTitle, x: x, base: y + 13, st: tst, color: C.muted, w: mw(SITE.alsoTitle, tst)});
+                var lines = alsoLines(maxW, 13), b = y + 13 + 6 + lh;
+                o.also = [];
+                lines.forEach(function (line, k) {
+                    line.forEach(function (it) {
+                        o.spans.push({text: MINOR[it.i].name, x: x + it.x, base: b + k * lh, st: st, color: C.muted, ai: it.i, w: it.w});
+                        o.also.push({i: it.i, x: x + it.x - 4, y: b + k * lh - 13 - 4, w: it.w + 8, h: lh});
+                    });
+                });
+                return 13 + 6 + lines.length * lh;
+            }
+            function layPlaces() {
+                var o = {spans: [], hits: [], draw: drawMap}, g = MAP;
+                if (g.land) {
+                    // 地图下面：一句话，还没来得及写的
+                    var cy = g.y + g.h + 12 + 14;
+                    o.spans.push({text: SITE.caption, x: g.x, base: cy, st: SMALL, color: C.muted, w: mw(SITE.caption, SMALL)});
+                    layAlso(o, g.x, cy + 16, g.w);
+                    // 右边：标题和八个城市
+                    var fs = g.fs, hst = {wt: 600, size: 15}, nst = {wt: 600, size: fs}, pst = {size: fs}, sst = {size: fs - 1};
+                    var nameW = fs * 3.5, tw = g.lw - nameW, plh = fs * 1.6, pad = fs * 0.55;
+                    var rows = CITIES.map(function (c) {
+                        var a = wrap(tokens([{text: c.notes[0] || ''}], pst), tw), b = wrap(tokens([{text: c.notes[1] || ''}], sst), tw);
+                        return {a: a, b: b, h: (a.length + b.length) * plh + pad * 2};
+                    });
+                    var total = 15 * 1.75 + 10 + rows.reduce(function (s, r) { return s + r.h; }, 0);
+                    o.fits = total <= g.bot0 - g.top0 && g.h >= 150;
+                    var y = Math.max(g.top0, Math.min(g.y, g.bot0 - total));
+                    o.spans.push({text: SITE.placesTitle, x: g.lx, base: y + 18, st: hst, color: C.ink, w: mw(SITE.placesTitle, hst)});
+                    y += 15 * 1.75 + 10;
+                    rows.forEach(function (r, i) {
+                        var c = CITIES[i], b0 = y + pad + plh * 0.5 + fs * 0.36;
+                        o.spans.push({text: c.name, x: g.lx, base: b0, st: nst, color: C.ink, ci: i, w: mw(c.name, nst)});
+                        place(r.a, g.lx + nameW, b0, plh, pst, C.ink, null, o.spans);
+                        place(r.b, g.lx + nameW, b0 + r.a.length * plh, plh, sst, C.muted, null, o.spans);
+                        o.hits.push({id: 'city' + i, tag: 'button', cls: 'pick', label: c.name + '：' + c.notes.join('，'), pick: i, box: {x: g.lx - 6, y: y, w: g.lw + 6, h: r.h}});
+                        y += r.h;
+                    });
+                } else {
+                    // 竖屏：地图下面一次只说一个城市
+                    var x = g.x, y2 = g.y + g.h + 26, big = {wt: 600, size: 22}, p1 = {size: 16}, p2 = {size: 15}, tw2 = colW;
+                    // 留够最长那个城市的地方，换城市的时候 ← → 不会跳
+                    var most = wrap(tokens([{text: SITE.caption}], p2), tw2).length;
+                    CITIES.forEach(function (c) {
+                        most = Math.max(most, wrap(tokens([{text: c.notes[0] || ''}], p1), tw2).length + wrap(tokens([{text: c.notes[1] || ''}], p2), tw2).length);
+                    });
+                    var blockH = 22 * 1.3 + 8 + Math.max(2, most) * 16 * 1.6 + 44;
+                    if (sel < 0) {
+                        o.spans.push({text: SITE.placesTitle, x: colL, base: y2 + 22, st: big, color: C.ink, w: mw(SITE.placesTitle, big)});
+                        place(wrap(tokens([{text: SITE.caption}], p2), tw2), colL, y2 + 22 + 8 + 16 * 1.25, 16 * 1.6, p2, C.muted, null, o.spans);
+                    } else {
+                        var c = CITIES[sel];
+                        o.spans.push({text: c.name, x: colL, base: y2 + 22, st: big, color: C.ink, w: mw(c.name, big)});
+                        var nb = y2 + 22 + 8 + 16 * 1.25;
+                        nb += place(wrap(tokens([{text: c.notes[0] || ''}], p1), tw2), colL, nb, 16 * 1.6, p1, C.ink, null, o.spans) * 16 * 1.6;
+                        place(wrap(tokens([{text: c.notes[1] || ''}], p2), tw2), colL, nb, 16 * 1.6, p2, C.muted, null, o.spans);
+                    }
+                    var ab = y2 + blockH - 6, ast = {size: 22}, aw = mw('←', ast);
+                    o.spans.push({text: '←', x: colL, base: ab, st: ast, color: C.ink, id: 'prev', w: aw});
+                    o.spans.push({text: '→', x: colL + aw + 28, base: ab, st: ast, color: C.ink, id: 'next', w: aw});
+                    o.hits.push({id: 'prev', tag: 'button', label: '←', aria: '上一个', hotId: 'prev', act: function () { stepSel(-1); }, box: {x: colL - 10, y: ab - 30, w: aw + 20, h: 42}});
+                    o.hits.push({id: 'next', tag: 'button', label: '→', aria: '下一个', hotId: 'next', act: function () { stepSel(1); }, box: {x: colL + aw + 18, y: ab - 30, w: aw + 20, h: 42}});
+                    var ay = y2 + blockH + 16;
+                    var need = 13 + 6 + alsoLines(colW, 13).length * 13 * 1.7;
+                    layAlso(o, colL, ay, colW);
+                    o.fits = ay + need <= BT - 8 && g.h >= 150;
+                }
+                return o;
+            }
+            function provBox(p) {
+                var g = MAP;
+                return p.bb ? {x0: g.x + p.bb.x * g.s - 3, y0: g.y + p.bb.y * g.s - 3, x1: g.x + (p.bb.x + p.bb.width) * g.s + 3, y1: g.y + (p.bb.y + p.bb.height) * g.s + 3} :
+                    {x0: g.x - 3, y0: g.y - 3, x1: g.x + g.w + 3, y1: g.y + g.h + 3};
+            }
+            function drawMap(c, cr) {
+                var g = MAP, prov = sel >= 0 ? CITIES[sel].prov : null, i;
+                c.save();
+                c.translate(g.x, g.y); c.scale(g.s, g.s);
+                c.lineJoin = 'round'; c.lineWidth = 1 / g.s; c.strokeStyle = C.bg;
+                PROV.forEach(function (p) {
+                    if (cr && !meets(provBox(p), cr)) return;
+                    c.fillStyle = p.name === prov ? C.on : LIT[p.name] ? C.lit : C.land;
+                    c.fill(p.path); c.stroke(p.path);
+                });
+                c.fillStyle = C.inset;
+                FRAME.forEach(function (p) { c.fill(p); });
+                c.restore();
+                for (i = 0; i < MPTS.length; i++) {
+                    var p = MPTS[i];
+                    dot(c, p.x, p.y, 4.5, C.lit); dot(c, p.x, p.y, 3, C.accent);
+                    if (alsoHot === i) { c.strokeStyle = C.accent; c.lineWidth = 1; c.beginPath(); c.arc(p.x, p.y, 8, 0, 2 * PI); c.stroke(); }
+                }
+                PTS.forEach(function (p) { dot(c, p.x, p.y, 6, C.land); dot(c, p.x, p.y, 4, C.accent); });
+            }
+            function dot(c, x, y, r, col) { c.fillStyle = col; c.beginPath(); c.arc(x, y, r, 0, 2 * PI); c.fill(); }
+
+            // ---------------------------------------------------------------- 写过的东西
+            function layCode() {
+                var o = {spans: [], hits: [], domes: [], draw: drawDomes};
+                var top0 = HB + (narrow ? 14 : 24), bot0 = BT - 12, avail = bot0 - top0;
+                var hst = {wt: 600, size: 15};
+                var fit = null;
+                // 一行四个（玻璃罩在上）→ 两行两个 → 一个一行（小玻璃罩在左），字从大往小试，放得下为止
+                var modes = narrow || W < 700 ? ['rows'] : colW >= 1000 ? ['four', 'two', 'rows'] : ['two', 'rows'];
+                for (var mi = 0; mi < modes.length && !fit; mi++) {
+                    for (var f = clamp(Math.min(W / 108, H / 62), 15, 17); f >= 12 && !fit; f -= 0.5) {
+                        var r = cards(modes[mi], f, avail - 15 * 1.75 - 14);
+                        if (r) fit = r;
+                    }
+                }
+                o.fits = !!fit;
+                if (!fit) fit = cards('rows', 12, 1e9);
+                var y = top0 + Math.max(0, (avail - (15 * 1.75 + 14 + fit.h)) * 0.4);
+                o.spans.push({text: SITE.codeTitle, x: colL, base: y + 18, st: hst, color: C.ink, w: mw(SITE.codeTitle, hst)});
+                y += 15 * 1.75 + 14;
+                fit.place(o, y);
+                linkHits(o.spans, o.hits);
+                return o;
+            }
+            // 排一种版式；放不下就返回 null
+            function cards(mode, f, avail) {
+                var gapX = mode === 'rows' ? 0 : clamp(colW * 0.03, 24, 44), cols = mode === 'four' ? 4 : mode === 'two' ? 2 : 1;
+                var cw = (colW - gapX * (cols - 1)) / cols;
+                var dd = mode === 'four' ? clamp(cw * 0.6, 140, 180) : mode === 'two' ? clamp(cw * 0.3, 96, 150) : clamp(colW * 0.21, 68, 80);
+                var nst = {wt: 600, size: f + 2}, rst = {mono: true, size: f - 1}, dst = {size: f}, lst = {size: f};
+                var dlh = f * (mode === 'rows' ? 1.55 : 1.7);
+                var tx = mode === 'four' ? 0 : dd + (mode === 'rows' ? 14 : 20), tw = cw - tx;
+                var items = WORKS.slice(0, 8).map(function (w) {
+                    var d = wrap(tokens([{text: w.desc}], dst), tw);
+                    var textH = (f + 2) * 1.5 + d.length * dlh + 4 + f * 2.1;
+                    return {w: w, d: d, h: mode === 'four' ? dd + f * 1.5 + textH : Math.max(dd, textH)};
+                });
+                var gapY = mode === 'rows' ? f * 1.2 : f * 2;
+                var rowsH = [], i;
+                for (i = 0; i < items.length; i += cols) rowsH.push(Math.max.apply(null, items.slice(i, i + cols).map(function (it) { return it.h; })));
+                var moreH = f * 1.2 + f * 1.6;
+                var h = rowsH.reduce(function (s, v) { return s + v; }, 0) + gapY * (rowsH.length - 1) + moreH;
+                if (h > avail) return null;
+                return {h: h, place: function (o, y0) {
+                    var y = y0;
+                    items.forEach(function (it, k) {
+                        var col = k % cols, x = colL + col * (cw + gapX);
+                        if (col === 0 && k) y += rowsH[k / cols - 1] + gapY;
+                        o.domes.push({x: x + dd / 2, y: y + dd / 2, a: dd / 2, w8: it.w});
+                        // 玻璃罩也能点，去的地方和项目名一样；不另占 Tab 位
+                        if (it.w.name.href) o.hits.push({id: 'dome' + k, tag: 'a', a: it.w.name, hotId: 'w' + k, dome: true, notab: true, cls: 'dome', box: {x: x, y: y, w: dd, h: dd}});
+                        var t0 = mode === 'four' ? y + dd + f * 1.5 : y, x0 = x + tx;
+                        var b = t0 + (f + 2) * 1.1;
+                        var nw = mw(it.w.name.text, nst);
+                        var sp = {text: it.w.name.text, x: x0, base: b, st: nst, color: C.ink, w: nw};
+                        if (it.w.name.href) { sp.a = it.w.name; sp.id = 'w' + k; }
+                        o.spans.push(sp);
+                        if (it.w.repo) o.spans.push({text: it.w.repo, x: x0 + nw + f * 0.45, base: b, st: rst, color: C.muted, w: mw(it.w.repo, rst)});
+                        b += (f + 2) * 0.4 + dlh * 0.72;
+                        place(it.d, x0, b, dlh, dst, C.muted, null, o.spans);
+                        b += it.d.length * dlh + 4 + f * 0.5;
+                        var lx = x0, ul = {color: C.muted, hot: C.accent, off: 0.22, th: 0};
+                        it.w.links.forEach(function (a, j) {
+                            var w = mw(a.text, lst);
+                            o.spans.push({text: a.text, x: lx, base: b, st: lst, color: C.ink, a: a, id: 'w' + k + 'l' + j, ul: ul, w: w});
+                            lx += w + f * 1.1;
+                        });
+                        if (it.w.lang) o.spans.push({text: it.w.lang, x: lx, base: b, st: lst, color: C.ink, w: mw(it.w.lang, lst)});
+                    });
+                    y += rowsH[rowsH.length - 1] + f * 1.2 + f * 1.1;
+                    place(wrap(tokens(SITE.more, lst), colW), colL, y, f * 1.6, lst, C.muted, {color: C.muted, ul: {color: C.muted, hot: C.accent, off: 0.22, th: 0}}, o.spans);
+                }};
+            }
+            // 圆形的画直接印在桌面上，玻璃罩在着色器里画
+            function drawDomes(c, cr) {
+                LAY.domes.forEach(function (d) {
+                    if (!d.w8.img || (cr && !meets({x0: d.x - d.a, y0: d.y - d.a, x1: d.x + d.a, y1: d.y + d.a}, cr))) return;
+                    var sz = 240 / 112 * d.a / 1.06;
+                    c.drawImage(d.w8.img, d.x - sz / 2, d.y - sz / 2, sz, sz);
+                });
+            }
+
+            // ---------------------------------------------------------------- 印到桌面上
+            var fc = doc.createElement('canvas'), fx = fc.getContext('2d');
+            var texs = [null, null, null], prevT = 0, curT = 0, fadeT0 = -1, fadeDur = 0.5, texW = 0, texH = 0;
+
+            // 悬停、选中的颜色在印的时候才定，所以换颜色不用重新排版
+            function colorOf(s) {
+                return (s.id && hot === s.id) || (s.ai !== undefined && alsoHot === s.ai) || (s.ci !== undefined && sel === s.ci) ? C.accent : s.color;
+            }
+            function spanBox(s) { return {x0: s.x - 3, y0: s.base - s.st.size * 1.05, x1: s.x + s.w + 3, y1: s.base + s.st.size * 0.45}; }
+            function meets(a, b) { return a.x0 < b.x1 && b.x0 < a.x1 && a.y0 < b.y1 && b.y0 < a.y1; }
+            function drawSpans(c, spans, cr) {
+                spans.forEach(function (s) {
+                    if (cr && !meets(spanBox(s), cr)) return;
+                    var col = colorOf(s), on = col === C.accent && s.color !== C.accent;
+                    c.font = F(s.st);
+                    c.fillStyle = col;
+                    c.fillText(s.text, s.x, s.base);
+                    if (s.ul) {
+                        var size = s.st.size, th = s.ul.th ? size * s.ul.th : 1;
+                        c.fillStyle = on ? (s.ul.hot || C.accent) : s.ul.color;
+                        c.fillRect(s.x, s.base + size * s.ul.off - th / 2 + 1, s.w, th);
+                    }
+                });
+            }
+            function paint() {
+                fx.setTransform(fc.width / W, 0, 0, fc.height / H, 0, 0);
+                paintInto(fx, null);
+            }
+            function paintInto(c, cr) {
+                var r = cr || {x0: 0, y0: 0, x1: W, y1: H};
+                c.fillStyle = C.bg; c.fillRect(r.x0, r.y0, r.x1 - r.x0, r.y1 - r.y0);
+                c.textBaseline = 'alphabetic'; c.textAlign = 'left';
+                if (LAY.draw) LAY.draw(c, cr);
+                drawSpans(c, LAY.spans, cr);
+                drawSpans(c, CH.spans, cr);
+                dot(c, CH.dot.x, CH.dot.y, 4, C.accent);
+            }
+
+            function newTex() {
+                var t = gl.createTexture();
+                gl.bindTexture(gl.TEXTURE_2D, t);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, texW, texH, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+                return t;
+            }
+            function fadeMix(t) {
+                if (fadeT0 < 0) return 1;
+                var k = clamp((t - fadeT0) / fadeDur, 0, 1);
+                return k * k * (3 - 2 * k);
+            }
+            // 显卡上把两张按比例混成第三张（也用来原样复制一张）
+            function blit(dst, a, b, m) {
+                if (!texs[dst]) texs[dst] = newTex();
+                gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
+                gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texs[dst], 0);
+                gl.viewport(0, 0, texW, texH);
+                gl.useProgram(PB.p);
+                gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, texs[a]);
+                gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, texs[b]);
+                gl.uniform1i(PB.uA, 0); gl.uniform1i(PB.uB, 1);
+                gl.uniform1f(PB.uMix, m); gl.uniform2f(PB.uSz, texW, texH);
+                gl.drawArrays(gl.TRIANGLES, 0, 3);
+                gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+                gl.activeTexture(gl.TEXTURE0);
+            }
+            // 只重印一小块：画在一张小画布上，再贴到显卡上那张图的对应位置
+            var rc = doc.createElement('canvas'), rx = rc.getContext('2d');
+            function uploadRegions(ti, rects) {
+                var kx = fc.width / W, ky = fc.height / H;
+                gl.bindTexture(gl.TEXTURE_2D, texs[ti]);
+                rects.forEach(function (r) {
+                    var x0 = clamp(Math.floor(r.x0 * kx) - 2, 0, texW), y0 = clamp(Math.floor(r.y0 * ky) - 2, 0, texH);
+                    var x1 = clamp(Math.ceil(r.x1 * kx) + 2, 0, texW), y1 = clamp(Math.ceil(r.y1 * ky) + 2, 0, texH);
+                    if (x1 <= x0 || y1 <= y0) return;
+                    rc.width = x1 - x0; rc.height = y1 - y0;
+                    var cr = {x0: x0 / kx, y0: y0 / ky, x1: x1 / kx, y1: y1 / ky};
+                    rx.setTransform(kx, 0, 0, ky, -x0, -y0);
+                    paintInto(rx, cr);
+                    gl.texSubImage2D(gl.TEXTURE_2D, 0, x0, y0, gl.RGBA, gl.UNSIGNED_BYTE, rc);
+                });
+            }
+            // 推一张新的桌面上去：整张，或者只有几块；dur 是淡入的时长，0 就是立刻换
+            function pushFloor(dur, rects) {
+                var t = T(), m = fadeMix(t), free;
+                if (!texs[curT] || (!dur && !rects)) {
+                    curT = prevT = 0;
+                    if (!texs[0]) texs[0] = newTex();
+                    gl.bindTexture(gl.TEXTURE_2D, texs[0]);
+                    gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, gl.RGBA, gl.UNSIGNED_BYTE, fc);
+                    fadeT0 = -1;
+                    return;
+                }
+                if (!dur) { uploadRegions(curT, rects); return; }
+                // 屏幕上正在显示的那一刻存成“上一张”
+                if (m < 1 && prevT !== curT) { var spare = 3 - prevT - curT; blit(spare, prevT, curT, m); free = prevT; prevT = spare; }
+                else { free = prevT !== curT ? prevT : (curT + 1) % 3; prevT = curT; }
+                if (rects) { blit(free, curT, curT, 1); uploadRegions(free, rects); }
+                else {
+                    if (!texs[free]) texs[free] = newTex();
+                    gl.bindTexture(gl.TEXTURE_2D, texs[free]);
+                    gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, gl.RGBA, gl.UNSIGNED_BYTE, fc);
+                }
+                curT = free; fadeT0 = t; fadeDur = dur;
+            }
+            // 排版只在换场景、换大小、换声音开关、图片到了的时候重做；悬停和选中只重印变了颜色的那几块
+            var LKEY = '', PCOL = [], PPROV = null, PALSO = -1, PSEL = -2, imgsLoaded = 0;
+            function layoutKey() { return [scene, scene === 'places' && !MAP.land ? sel : '', scene === 'code' ? imgsLoaded : '', W, H, soundOn, texW].join('|'); }
+            function remember() {
+                PCOL = CH.spans.concat(LAY.spans).map(colorOf);
+                PPROV = sel >= 0 ? CITIES[sel].prov : null; PALSO = alsoHot;
+            }
+            function dirtyRects() {
+                var rs = [];
+                CH.spans.concat(LAY.spans).forEach(function (sp, i) {
+                    var c = colorOf(sp);
+                    if (c !== PCOL[i]) { rs.push(spanBox(sp)); PCOL[i] = c; }
+                });
+                if (scene === 'places') {
+                    var prov = sel >= 0 ? CITIES[sel].prov : null;
+                    if (prov !== PPROV) {
+                        PROV.forEach(function (q) { if (q.name === prov || q.name === PPROV) rs.push(provBox(q)); });
+                        PPROV = prov;
+                    }
+                    if (alsoHot !== PALSO) {
+                        [PALSO, alsoHot].forEach(function (i) { if (i >= 0) { var q = MPTS[i]; rs.push({x0: q.x - 11, y0: q.y - 11, x1: q.x + 11, y1: q.y + 11}); } });
+                        PALSO = alsoHot;
+                    }
+                }
+                // 挨着的并起来，少传几次
+                for (var a = 0; a < rs.length; a++) for (var b = a + 1; b < rs.length; b++) {
+                    var p = rs[a], q = rs[b];
+                    if (meets({x0: p.x0 - 8, y0: p.y0 - 8, x1: p.x1 + 8, y1: p.y1 + 8}, q)) {
+                        p.x0 = Math.min(p.x0, q.x0); p.y0 = Math.min(p.y0, q.y0); p.x1 = Math.max(p.x1, q.x1); p.y1 = Math.max(p.y1, q.y1);
+                        rs.splice(b, 1); b = a;
+                    }
+                }
+                return rs;
+            }
+            function refresh(dur) {
+                if (!ON) return;
+                var key = layoutKey();
+                if (key !== LKEY || !texs[curT]) {
+                    LKEY = key;
+                    CH = layChrome();
+                    LAY = scene === 'places' ? layPlaces() : scene === 'code' ? layCode() : layHome();
+                    paint(); pushFloor(dur); remember();
+                    syncUI(CH.hits.concat(LAY.hits));
+                    syncDomes();
+                    if (buildKeep()) {
+                        if (scene !== 'places') RS = fitRadius();
+                        M.forEach(function (m) {
+                            var r = rFor(m);
+                            if (Math.abs(r - m.rT) > 0.01) { m.rT = r; wakeM(m); }
+                            m.goal = null; m.park = null; m.noFree = false;
+                            if (m.live && hitsKeep(m.x, m.y, m.r)) wakeM(m);
+                        });
+                    }
+                } else {
+                    var rs = dirtyRects();
+                    if (rs.length) pushFloor(dur, rs);
+                    if (sel !== PSEL) syncUI(CH.hits.concat(LAY.hits));
+                }
+                PSEL = sel;
+                wake();
+            }
+
+            // ---------------------------------------------------------------- 真链接、真按钮
+            var uiMap = {};
+            function syncUI(items) {
+                var keep = {};
+                items.forEach(function (it, k) {
+                    var el = uiMap[it.id];
+                    if (!el || el.tagName.toLowerCase() !== it.tag) {
+                        if (el && el.parentNode) el.parentNode.removeChild(el);
+                        el = uiMap[it.id] = doc.createElement(it.tag);
+                        el.draggable = false;
+                        if (it.tag === 'button') el.type = 'button';
+                        bindUI(el);
+                    }
+                    el._it = it;
+                    if (it.tag === 'a') {
+                        el.setAttribute('href', it.a.href);
+                        if (it.a.target) el.setAttribute('target', it.a.target); else el.removeAttribute('target');
+                        if (it.a.rel) el.setAttribute('rel', it.a.rel); else el.removeAttribute('rel');
+                        if (el.textContent !== it.a.text) el.textContent = it.a.text;
+                    } else {
+                        if (el.textContent !== it.label) el.textContent = it.label;
+                        if (it.aria) el.setAttribute('aria-label', it.aria);
+                        if (it.pressed !== undefined) el.setAttribute('aria-pressed', String(it.pressed));
+                        if (it.pick !== undefined) el.setAttribute('aria-pressed', String(sel === it.pick));
+                    }
+                    el.className = it.cls || '';
+                    if (it.notab) { el.tabIndex = -1; el.setAttribute('aria-hidden', 'true'); }
+                    el.style.left = it.box.x + 'px'; el.style.top = it.box.y + 'px';
+                    el.style.width = it.box.w + 'px'; el.style.height = it.box.h + 'px';
+                    if (uiEl.children[k] !== el) uiEl.insertBefore(el, uiEl.children[k] || null);
+                    keep[it.id] = 1;
+                });
+                Object.keys(uiMap).forEach(function (id) {
+                    if (!keep[id]) { var el = uiMap[id]; if (el.parentNode) el.parentNode.removeChild(el); delete uiMap[id]; }
+                });
+            }
+            function bindUI(el) {
+                function on(e) {
+                    var it = el._it;
+                    if (e && e.type === 'pointerenter' && e.pointerType !== 'mouse') return;
+                    if (it.pick !== undefined) { select(it.pick); return; }
+                    if (it.hotId && hot !== it.hotId) { hot = it.hotId; refresh(0); }
+                }
+                function off() { var it = el._it; if (it.hotId && hot === it.hotId) { hot = null; refresh(0); } }
+                el.addEventListener('pointerenter', on);
+                el.addEventListener('pointerleave', off);
+                el.addEventListener('focus', function () { on(null); });
+                el.addEventListener('blur', off);
+                el.addEventListener('click', function (e) {
+                    var it = el._it;
+                    if (it.act) { e.preventDefault(); it.act(); return; }
+                    if (it.pick !== undefined) { e.preventDefault(); select(it.pick); return; }
+                    // 名字回首页：不重新加载，只把地址里的 # 去掉
+                    if (it.home && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey && e.button === 0) { e.preventDefault(); goHome(); }
+                });
+            }
+
+            // ---------------------------------------------------------------- 弹珠
+            function randQuat() {
+                var u = Math.random(), v = Math.random() * 2 * PI, w = Math.random() * 2 * PI;
+                var a = Math.sqrt(1 - u), b = Math.sqrt(u);
+                return [a * Math.sin(v), a * Math.cos(v), b * Math.sin(w), b * Math.cos(w)];
+            }
+            M = CITIES.slice(0, NM).map(function (c, i) {
+                var look = LOOKS[i % LOOKS.length];
+                return {city: i, x: 0, y: 0, px: 0, py: 0, vx: 0, vy: 0, ovx: 0, ovy: 0, r: 40, rT: 40, q: randQuat(),
+                    glass: look.glass, vane: hex(look.vane), live: false, spawn: 0, inside: false, asleep: false, rest: 0, tx: 0, ty: 0};
+            });
+            function rFor(m) { return scene === 'places' ? (m.city !== sel ? R0 * 0.45 : R0) : RS; }
+            function mass(m) { var k = m.r / R0; return k * k * k; }
+            function inv(m) { return (m === held ? 0.15 : 1) / mass(m); }
+            function wakeM(m) { m.asleep = false; m.rest = 0; }
+
+            // 顺着走过的路滚：不打滑，转过的角度 = 走过的距离 / 半径
+            function roll(m, dx, dy) {
+                var d = Math.sqrt(dx * dx + dy * dy);
+                if (d < 1e-7) return;
+                var ang = d / m.r, s = Math.sin(ang / 2) / d, c = Math.cos(ang / 2);
+                var rx = dy * s, ry = dx * s;   // 转轴 = 朝上 × 速度；dx, dy 是屏幕坐标，转到 y 朝上正好是这样
+                var q = m.q, x = q[0], y = q[1], z = q[2], w = q[3];
+                q[0] = c * x + rx * w + ry * z;
+                q[1] = c * y - rx * z + ry * w;
+                q[2] = c * z + rx * y - ry * x;
+                q[3] = c * w - rx * x - ry * y;
+                var n = 1 / Math.sqrt(q[0] * q[0] + q[1] * q[1] + q[2] * q[2] + q[3] * q[3]);
+                q[0] *= n; q[1] *= n; q[2] *= n; q[3] *= n;
+            }
+
+            // 以速度 v 出手，滚多远停下
+            function stopDist(v) { var c = CF(); return v / KL - c / (KL * KL) * Math.log(1 + KL * v / c); }
+            function speedFor(D) {
+                var lo = 0, hi = 30000;
+                for (var i = 0; i < 40; i++) { var mid = (lo + hi) / 2; if (stopDist(mid) < D) lo = mid; else hi = mid; }
+                return lo;
+            }
+
+            // 随手撒开：只撒在没有字的地方，尽量谁也不挨着谁
+            function scatter(n) {
+                var F = freeGrid(RS), cells = [], pts = [], i;
+                for (i = 0; i < F.bl.length; i++) if (!F.bl[i]) cells.push(i);
+                for (var k = 0; k < n; k++) {
+                    var best = null, bd = -1;
+                    for (var c = 0; c < 60; c++) {
+                        var x, y, d = 1e9;
+                        if (cells.length) { i = cells[Math.floor(Math.random() * cells.length)]; x = (i % F.cols + 0.5) * F.g; y = (Math.floor(i / F.cols) + 0.5) * F.g; }
+                        else { x = RS + Math.random() * (W - 2 * RS); y = RS + Math.random() * (H - 2 * RS); }
+                        pts.forEach(function (p) { d = Math.min(d, Math.hypot(p.x - x, p.y - y)); });
+                        if (d > bd) { bd = d; best = {x: x, y: y}; }
+                    }
+                    pts.push(best);
+                }
+                return pts;
+            }
+
+            // ---------------------------------------------------------------- 字上不停弹珠
+            // 每一行字（和盖在上面的链接）是一块稍微隆起的地方：滚得快的直接过去，慢下来的会顺着滑到最近的空地
+            var KM = 4;
+            function buildKeep() {
+                var rs = [];
+                CH.spans.concat(LAY.spans).forEach(function (sp) {
+                    if (!sp.text || !sp.text.trim()) return;
+                    var z = sp.st.size;
+                    rs.push({x0: sp.x, y0: sp.base - z * 0.95, x1: sp.x + sp.w, y1: sp.base + z * 0.3});
+                });
+                CH.hits.concat(LAY.hits).forEach(function (it) { if (!it.dome) rs.push({x0: it.box.x, y0: it.box.y, x1: it.box.x + it.box.w, y1: it.box.y + it.box.h}); });
+                rs.push({x0: CH.dot.x - 5, y0: CH.dot.y - 5, x1: CH.dot.x + 5, y1: CH.dot.y + 5});
+                // 同一行挨着的并成一块
+                rs.sort(function (a, b) { return a.y0 - b.y0 || a.x0 - b.x0; });
+                var out = [];
+                rs.forEach(function (r) {
+                    var q = out[out.length - 1];
+                    if (q && Math.abs(q.y0 - r.y0) < 2 && Math.abs(q.y1 - r.y1) < 2 && r.x0 <= q.x1 + 8 && r.x1 >= q.x0 - 8) {
+                        q.x0 = Math.min(q.x0, r.x0); q.y0 = Math.min(q.y0, r.y0); q.x1 = Math.max(q.x1, r.x1); q.y1 = Math.max(q.y1, r.y1);
+                        return;
+                    }
+                    out.push({x0: r.x0, y0: r.y0, x1: r.x1, y1: r.y1});
+                });
+                out.forEach(function (r) { r.x0 -= KM; r.y0 -= KM; r.x1 += KM; r.y1 += KM; });
+                var sig = out.map(function (r) { return [r.x0, r.y0, r.x1, r.y1].map(Math.round).join(','); }).join(';') + '|' + W + 'x' + H +
+                    '|' + (LAY.domes || []).map(function (d) { return [d.x, d.y, d.a].map(Math.round).join(','); }).join(';');
+                KEEP = out;
+                if (sig === KEEPSIG) return false;
+                KEEPSIG = sig; FREE = {};
+                return true;
+            }
+            function hitsKeep(x, y, r) {
+                for (var i = 0; i < KEEP.length; i++) {
+                    var q = KEEP[i], dx = Math.max(q.x0 - x, 0, x - q.x1), dy = Math.max(q.y0 - y, 0, y - q.y1);
+                    if (dx * dx + dy * dy < r * r) return true;
+                }
+                return false;
+            }
+            // 按某个半径算一张空地表：格子中心放一颗这么大的弹珠，碰不碰得到字和桌边
+            function freeGrid(r) {
+                var key = Math.round(r * 4);
+                if (FREE[key]) return FREE[key];
+                var g = 6, cols = Math.ceil(W / g), rows = Math.ceil(H / g), bl = new Uint8Array(cols * rows), i, j;
+                for (j = 0; j < rows; j++) for (i = 0; i < cols; i++) {
+                    var x = (i + 0.5) * g, y = (j + 0.5) * g;
+                    if (x < r + 2 || x > W - r - 2 || y < r + 2 || y > H - r - 2) bl[j * cols + i] = 1;
+                }
+                KEEP.forEach(function (q) {
+                    var i0 = Math.max(0, Math.floor((q.x0 - r) / g)), i1 = Math.min(cols - 1, Math.floor((q.x1 + r) / g));
+                    var j0 = Math.max(0, Math.floor((q.y0 - r) / g)), j1 = Math.min(rows - 1, Math.floor((q.y1 + r) / g));
+                    for (var b = j0; b <= j1; b++) for (var a = i0; a <= i1; a++) {
+                        var x = (a + 0.5) * g, y = (b + 0.5) * g, dx = Math.max(q.x0 - x, 0, x - q.x1), dy = Math.max(q.y0 - y, 0, y - q.y1);
+                        if (dx * dx + dy * dy < r * r) bl[b * cols + a] = 1;
+                    }
+                });
+                (LAY.domes || []).forEach(function (d) {
+                    var rr = d.a + r + 3, i0 = Math.max(0, Math.floor((d.x - rr) / g)), i1 = Math.min(cols - 1, Math.floor((d.x + rr) / g));
+                    var j0 = Math.max(0, Math.floor((d.y - rr) / g)), j1 = Math.min(rows - 1, Math.floor((d.y + rr) / g));
+                    for (var b = j0; b <= j1; b++) for (var a = i0; a <= i1; a++) if (Math.hypot((a + 0.5) * g - d.x, (b + 0.5) * g - d.y) < rr) bl[b * cols + a] = 1;
+                });
+                return (FREE[key] = {g: g, cols: cols, rows: rows, bl: bl});
+            }
+            // 另一颗已经停在那儿、或者正往那儿去
+            function crowded(x, y, m) {
+                for (var i = 0; i < M.length; i++) {
+                    var o = M[i];
+                    if (o === m || !o.live) continue;
+                    var need = m.rT + o.rT + 3;
+                    if (o.goal && Math.hypot(o.goal.x - x, o.goal.y - y) < need) return true;
+                    if (o.park && Math.hypot(o.park.x - x, o.park.y - y) < need) return true;
+                    if ((o.asleep || Math.hypot(o.vx, o.vy) < 40) && Math.hypot(o.x - x, o.y - y) < need) return true;
+                }
+                return false;
+            }
+            // 离它最近的空地（一圈一圈往外找）
+            function freeSpot(m, any) {
+                var F = freeGrid(m.rT), g = F.g, ci = Math.floor(m.x / g), cj = Math.floor(m.y / g);
+                var best = null, bd = 1e18, K = Math.max(F.cols, F.rows);
+                for (var k = 0; k <= K; k++) {
+                    var lb = Math.max(0, (k - 1) * g);
+                    if (lb * lb > bd) break;
+                    for (var j = cj - k; j <= cj + k; j++) {
+                        if (j < 0 || j >= F.rows) continue;
+                        var edge = j === cj - k || j === cj + k, step = edge ? 1 : 2 * k;
+                        for (var i = ci - k; i <= ci + k; i += step) {
+                            if (i < 0 || i >= F.cols || F.bl[j * F.cols + i]) continue;
+                            var x = (i + 0.5) * g, y = (j + 0.5) * g, d = (x - m.x) * (x - m.x) + (y - m.y) * (y - m.y);
+                            if (d < bd && (any || !crowded(x, y, m))) { bd = d; best = {x: x, y: y}; }
+                        }
+                    }
+                }
+                return best;
+            }
+            // 这一幕的空地够不够这几颗弹珠舒舒服服地停下；不够就把弹珠变小一点
+            function fitRadius() {
+                var n = M.length, r = R0;
+                for (var k = 0; k < 16 && r > 12; k++) {
+                    if (room(r, n) >= Math.ceil(n * 1.5)) break;
+                    r = Math.max(12, r * 0.9);
+                }
+                return r;
+            }
+            function room(r, n) {
+                var F = freeGrid(r), g = F.g, pts = [], step = Math.max(1, Math.round(r / g)), sep = r * 2.3;
+                for (var j = 0; j < F.rows; j += step) for (var i = 0; i < F.cols; i += step) {
+                    if (F.bl[j * F.cols + i]) continue;
+                    var x = (i + 0.5) * g, y = (j + 0.5) * g, ok = true;
+                    for (var q = 0; q < pts.length && ok; q++) if (Math.hypot(pts[q].x - x, pts[q].y - y) < sep) ok = false;
+                    if (ok) { pts.push({x: x, y: y}); if (pts.length >= n * 2) return pts.length; }
+                }
+                return pts.length;
+            }
+
+            // 从右上角外面一把倒进来
+            function intro() {
+                var t = T(), pts = scene === 'places' ? PTS : scatter(M.length);
+                var sx = W + R0, sy = -R0;
+                var order = M.map(function (m, k) { return k; });
+                order.sort(function (a, b) {
+                    var pa = pts[a], pb = pts[b];
+                    return Math.hypot(pb.x - sx, pb.y - sy) - Math.hypot(pa.x - sx, pa.y - sy);
+                });
+                order.forEach(function (k, j) {
+                    var m = M[k], p = pts[k];
+                    m.live = false; m.spawn = t + 0.2 + j * 0.12; m.tx = p.x; m.ty = p.y;
+                });
+            }
+            function spawn(m) {
+                m.live = true; m.inside = false; wakeM(m);
+                m.r = m.rT = rFor(m);
+                var sx = W + m.r * (1.2 + Math.random() * 1.5), sy = -m.r * (1.2 + Math.random() * 2);
+                var dx = m.tx - sx, dy = m.ty - sy;
+                var v = speedFor(Math.hypot(dx, dy)) * (scene === 'places' ? 0.55 : 1) * (0.97 + Math.random() * 0.06);
+                var a = Math.atan2(dy, dx) + (Math.random() - 0.5) * 0.05;
+                m.x = m.px = sx; m.y = m.py = sy; m.vx = Math.cos(a) * v; m.vy = Math.sin(a) * v;
+            }
+
+            // 不要动画的时候：直接摆好
+            function placeNow() {
+                var pts = scene === 'places' ? null : scatter(M.length);
+                M.forEach(function (m, k) {
+                    var p = pts ? pts[k] : PTS[m.city];
+                    m.live = true; m.inside = true; m.spawn = 0; m.r = m.rT = rFor(m);
+                    m.x = m.tx = p.x; m.y = m.ty = p.y; m.vx = m.vy = 0;
+                });
+                if (scene === 'places') {
+                    // 地图上：各回各的城市，挤在一起的互相让开
+                    for (var it = 0; it < 80; it++) {
+                        M.forEach(function (m) { var p = PTS[m.city]; m.x += (p.x - m.x) * 0.2; m.y += (p.y - m.y) * 0.2; });
+                        separate(); walls(false);
+                    }
+                } else {
+                    // 别的幕：一颗一颗放，撒的位置压着字或者被占了，就放到最近的空地
+                    M.forEach(function (m) { m.x = m.y = -1e5; m.asleep = true; });
+                    M.forEach(function (m) {
+                        m.x = m.tx; m.y = m.ty;
+                        if (hitsKeep(m.x, m.y, m.r) || crowded(m.x, m.y, m)) {
+                            var f = freeSpot(m) || freeSpot(m, true);
+                            if (f) { m.x = f.x; m.y = f.y; }
+                        }
+                    });
+                }
+                M.forEach(function (m) {
+                    m.goal = null; m.park = null; m.vx = m.vy = 0;
+                    if (hitsKeep(m.x, m.y, m.r)) { var f = freeSpot(m) || freeSpot(m, true); if (f) { m.x = f.x; m.y = f.y; if (scene === 'places') m.park = f; } }
+                    m.px = m.x; m.py = m.y; m.asleep = true;
+                });
+            }
+
+            function sound(speed, wall) { if (soundOn) clink(speed, wall); }
+
+            function contacts(first) {
+                var n = M.length, i, j, a, b;
+                for (i = 0; i < n; i++) {
+                    a = M[i]; if (!a.live) continue;
+                    for (j = i + 1; j < n; j++) {
+                        b = M[j]; if (!b.live || (a.asleep && b.asleep)) continue;
+                        var dx = b.x - a.x, dy = b.y - a.y, rs = a.r + b.r + 4, dd = dx * dx + dy * dy;
+                        if (dd >= rs * rs || dd < 1e-9) continue;
+                        var d = Math.sqrt(dd), nx = dx / d, ny = dy / d;
+                        var vn = (b.vx - a.vx) * nx + (b.vy - a.vy) * ny;
+                        // 还没碰上的时候，这一步最多只许把缝合上
+                        var allow = -Math.max(0, d - a.r - b.r) / STEP;
+                        if (vn >= allow) continue;
+                        if (a.asleep && -vn > 8) wakeM(a);
+                        if (b.asleep && -vn > 8) wakeM(b);
+                        var ia = a.asleep ? 0 : inv(a), ib = b.asleep ? 0 : inv(b);
+                        if (ia + ib === 0) continue;
+                        // 弹回去的速度按这一步加力之前算，不然弹簧的力会被一次次弹回来，永远停不下
+                        var v0 = (b.ovx - a.ovx) * nx + (b.ovy - a.ovy) * ny;
+                        var goal = first && -v0 > 40 ? -E_BALL * v0 : allow;
+                        var jn = (goal - vn) / (ia + ib);
+                        a.vx -= jn * ia * nx; a.vy -= jn * ia * ny;
+                        b.vx += jn * ib * nx; b.vy += jn * ib * ny;
+                        if (first && -v0 > 30) sound(-v0, false);
+                    }
+                }
+                if (!first) return;
+                // 四边：只拦往外走的，所以从外面滚进来的能进来
+                M.forEach(function (m) {
+                    if (!m.live || m.asleep) return;
+                    var hit = 0;
+                    if ((m.x < m.r && m.vx < 0) || (m.x > W - m.r && m.vx > 0)) {
+                        hit = Math.abs(m.ovx); m.vx = m.ovx * m.vx > 0 && hit > 40 ? -m.ovx * E_WALL : 0;
+                    }
+                    if ((m.y < m.r && m.vy < 0) || (m.y > H - m.r && m.vy > 0)) {
+                        var hy = Math.abs(m.ovy); m.vy = m.ovy * m.vy > 0 && hy > 40 ? -m.ovy * E_WALL : 0; hit = Math.max(hit, hy);
+                    }
+                    if (hit > 40) sound(hit, true);
+                });
+            }
+            function separate() {
+                var n = M.length;
+                for (var i = 0; i < n; i++) {
+                    var a = M[i]; if (!a.live) continue;
+                    for (var j = i + 1; j < n; j++) {
+                        var b = M[j]; if (!b.live) continue;
+                        var dx = b.x - a.x, dy = b.y - a.y, rs = a.r + b.r, dd = dx * dx + dy * dy;
+                        if (dd >= rs * rs) continue;
+                        var d = Math.sqrt(dd);
+                        if (d < 1e-6) { var ang = Math.random() * 2 * PI; dx = Math.cos(ang); dy = Math.sin(ang); d = 1; dd = 0; }
+                        var ov = rs - Math.sqrt(dd), ia = inv(a), ib = inv(b), nx = dx / d, ny = dy / d;
+                        var ka = ov * ia / (ia + ib), kb = ov * ib / (ia + ib);
+                        a.x -= nx * ka; a.y -= ny * ka; b.x += nx * kb; b.y += ny * kb;
+                        // 睡着的被挤动了就醒过来，不然会被一点一点推到字上
+                        if (a.asleep && ka > 0.01) wakeM(a);
+                        if (b.asleep && kb > 0.01) wakeM(b);
+                    }
+                }
+            }
+            function walls(onlyInside) {
+                M.forEach(function (m) {
+                    if (!m.live) return;
+                    if (!m.inside && m.x >= m.r && m.x <= W - m.r && m.y >= m.r && m.y <= H - m.r) m.inside = true;
+                    if (onlyInside && !m.inside) return;
+                    m.x = clamp(m.x, m.r, Math.max(m.r, W - m.r)); m.y = clamp(m.y, m.r, Math.max(m.r, H - m.r));
+                });
+            }
+
+            function physics(h, t) {
+                var places = scene === 'places', cf = CF(), lim = 6000 * SC, g = 2600 * SC;
+                M.forEach(function (m) {
+                    if (!m.live) { if (t >= m.spawn && m.spawn > 0) spawn(m); else return; }
+                    m.px = m.x; m.py = m.y; m.ovx = m.vx; m.ovy = m.vy;
+                    if (m.r !== m.rT) {
+                        m.r += (m.rT - m.r) * Math.min(1, h * 9);
+                        if (Math.abs(m.r - m.rT) < 0.01) m.r = m.rT;
+                        wakeM(m);
+                    }
+                    if (m.asleep) return;
+                    var ax = 0, ay = 0, guided = false;
+                    if (m === held) {
+                        ax = (hold.x - m.x) * KH + (ptr.vx - m.vx) * DH;
+                        ay = (hold.y - m.y) * KH + (ptr.vy - m.vy) * DH;
+                    } else {
+                        if (places) {
+                            // 被挤到字上、自己又回不去的，就在旁边找块空地停（细线还连着它的城市）
+                            if (hitsKeep(m.x, m.y, m.r) && Math.hypot(m.vx, m.vy) < 30) {
+                                m.onT = (m.onT || 0) + h;
+                                if (m.onT > 0.4) { m.onT = 0; m.park = freeSpot(m) || m.park || freeSpot(m, true); if (!m.park) m.noFree = true; }
+                            } else m.onT = 0;
+                            var c = m.park || PTS[m.city];
+                            ax = (c.x - m.x) * KS - m.vx * CS; ay = (c.y - m.y) * KS - m.vy * CS;
+                            var am = Math.sqrt(ax * ax + ay * ay);
+                            if (am > lim) { ax *= lim / am; ay *= lim / am; }
+                        }
+                        if (tilt.on) { ax += tilt.gx * g; ay += tilt.gy * g; }
+                        // 慢下来还压着字：顺着往最近的空地滑过去，到了就停
+                        if (!places) {
+                            var on = hitsKeep(m.x, m.y, m.r), sp0 = Math.sqrt(m.vx * m.vx + m.vy * m.vy);
+                            if (on && (sp0 < VON * SC || m.goal)) {
+                                if (!m.goal || t - m.goalT > 0.3) { m.goal = freeSpot(m) || m.goal || freeSpot(m, true); m.goalT = t; }
+                                if (!m.goal) m.noFree = true;
+                                if (m.goal) {
+                                    var gx = m.goal.x - m.x, gy = m.goal.y - m.y, gd = Math.sqrt(gx * gx + gy * gy) || 1;
+                                    var vd = Math.min(110 * SC, 2.2 * gd + 10 * SC);
+                                    ax += (gx / gd * vd - m.vx) * 5; ay += (gy / gd * vd - m.vy) * 5;
+                                    guided = true;
+                                }
+                            } else if (!on) m.goal = null;
+                        }
+                    }
+                    m.vx += ax * h; m.vy += ay * h;
+                    if (m !== held && !guided) {
+                        // 滚动阻力：一部分跟速度成正比，一部分是常数，所以总会停下来
+                        var sp = Math.sqrt(m.vx * m.vx + m.vy * m.vy);
+                        if (sp > 0) {
+                            var dec = (KL * sp + cf) * h;
+                            if (dec >= sp) m.vx = m.vy = 0; else { m.vx *= (sp - dec) / sp; m.vy *= (sp - dec) / sp; }
+                        }
+                    }
+                });
+                for (var it = 0; it < 6; it++) contacts(it === 0);
+                M.forEach(function (m) { if (m.live && !m.asleep) { m.x += m.vx * h; m.y += m.vy * h; } });
+                separate(); separate();
+                domeHits(t);
+                walls(true);
+                M.forEach(function (m) {
+                    if (!m.live) return;
+                    roll(m, m.x - m.px, m.y - m.py);
+                    if (m.asleep) return;
+                    var sp = Math.sqrt(m.vx * m.vx + m.vy * m.vy);
+                    // 压着字的不许睡（实在找不到空地的除外）
+                    var stuck = !m.noFree && hitsKeep(m.x, m.y, m.r - 1.5);
+                    if (m !== held && sp < 4 && m.r === m.rT && !stuck) {
+                        m.rest += h;
+                        if (m.rest > 0.25) { m.asleep = true; m.vx = m.vy = 0; }
+                    } else m.rest = 0;
+                });
+            }
+
+            // 玻璃罩进来时一个接一个长出来，走的时候缩回去
+            function domeS(d, t) {
+                if (RM) return d.to;
+                var k = clamp((t - d.t0) / 0.4, 0, 1);
+                return d.from + (d.to - d.from) * k * k * (3 - 2 * k);
+            }
+            function syncDomes() {
+                var t = T(), list = scene === 'code' ? LAY.domes : [];
+                list.forEach(function (d, k) {
+                    var o = DOMES[k] || (DOMES[k] = {from: 0, to: 0, t0: 0});
+                    o.x = d.x; o.y = d.y; o.a = d.a;
+                    if (o.to !== 1) { o.from = domeS(o, t); o.to = 1; o.t0 = t + k * 0.07; }
+                });
+                DOMES.forEach(function (o, k) {
+                    if (k >= list.length && o.to !== 0) { o.from = domeS(o, t); o.to = 0; o.t0 = t + k * 0.05; }
+                });
+            }
+            // 罩子是固定的：弹珠碰上去弹回来，罩子长出来的时候把压在下面的推开
+            function domeHits(t) {
+                DOMES.forEach(function (d) {
+                    var A = d.a * domeS(d, t);
+                    if (A < 0.5) return;
+                    M.forEach(function (m) {
+                        if (!m.live) return;
+                        var dx = m.x - d.x, dy = m.y - d.y, dist = Math.hypot(dx, dy), need = A + m.r;
+                        if (dist >= need) return;
+                        if (dist < 1e-6) { dx = 1; dy = 0; dist = 1; }
+                        var nx = dx / dist, ny = dy / dist;
+                        m.x = d.x + nx * need; m.y = d.y + ny * need;
+                        if (m.asleep) wakeM(m);
+                        var vn = m.vx * nx + m.vy * ny;
+                        if (vn < 0) {
+                            var v0 = m.ovx * nx + m.ovy * ny, goal = -v0 > 40 ? -0.8 * v0 : 0;
+                            m.vx += (goal - vn) * nx; m.vy += (goal - vn) * ny;
+                            if (-v0 > 30) sound(-v0, false);
+                        }
+                    });
+                });
+            }
+
+            function marbleAt(x, y, slop) {
+                var best = null, bd = 1e9;
+                M.forEach(function (m) {
+                    if (!m.live) return;
+                    var d = Math.hypot(m.x - x, m.y - y);
+                    if (d < m.r + slop && d < bd) { bd = d; best = m; }
+                });
+                return best;
+            }
+
+            // 拍一下桌子
+            function slap(x, y) {
+                var reach = 0.35 * Math.hypot(W, H);
+                M.forEach(function (m) {
+                    if (!m.live) return;
+                    var dx = m.x - x, dy = m.y - y, d = Math.hypot(dx, dy);
+                    if (d > reach) return;
+                    if (d < 1) { var a = Math.random() * 2 * PI; dx = Math.cos(a); dy = Math.sin(a); d = 1; }
+                    var f = Math.pow(1 - d / reach, 2) * 900 * SC;
+                    m.vx += dx / d * f; m.vy += dy / d * f; wakeM(m);
+                });
+            }
+            // 手指划过去，顺手带一下
+            function nudge(x0, y0, x1, y1, vx, vy) {
+                var sp = Math.hypot(vx, vy);
+                if (sp < 120) return;
+                var sx = x1 - x0, sy = y1 - y0, L2 = sx * sx + sy * sy;
+                M.forEach(function (m) {
+                    if (!m.live || m === held) return;
+                    var k = L2 > 0 ? clamp(((m.x - x0) * sx + (m.y - y0) * sy) / L2, 0, 1) : 1;
+                    var dx = m.x - (x0 + sx * k), dy = m.y - (y0 + sy * k), d = Math.hypot(dx, dy);
+                    if (d > m.r) return;
+                    if (d < 1e-3) { dx = vx; dy = vy; d = sp; }
+                    var nx = dx / d, ny = dy / d, s = (vx - m.vx) * nx + (vy - m.vy) * ny;
+                    if (s <= 0) return;
+                    s = Math.min(s, 1800 * SC) * 0.6;
+                    m.vx += nx * s; m.vy += ny * s; wakeM(m);
+                });
+            }
+            // 离开地图：长回原来的大小，从一堆里往外推一把
+            function shove() {
+                var cx = 0, cy = 0, n = 0;
+                M.forEach(function (m) { if (m.live) { cx += m.x; cy += m.y; n++; } });
+                if (!n) return;
+                cx /= n; cy /= n;
+                M.forEach(function (m) {
+                    var dx = m.x - cx, dy = m.y - cy, d = Math.hypot(dx, dy), a = Math.atan2(dy, dx) + (Math.random() - 0.5) * 0.8;
+                    if (d < 1) a = Math.random() * 2 * PI;
+                    var f = (330 + Math.random() * 220) * SC;
+                    m.vx += Math.cos(a) * f; m.vy += Math.sin(a) * f;
+                });
+            }
+
+            // ---------------------------------------------------------------- 场景
+            function announce() {
+                say.textContent = scene === 'places' && sel >= 0 ? CITIES[sel].name + '：' + CITIES[sel].notes.join('，') : '';
+            }
+            function select(s) {
+                if (!ON || s === sel || scene !== 'places') return;
+                sel = s;
+                M.forEach(function (m) { m.rT = rFor(m); m.park = null; m.noFree = false; wakeM(m); });
+                if (RM) placeNow();
+                try { history.replaceState(null, '', s >= 0 ? '#places/' + (s + 1) : '#places'); } catch (e) {}
+                announce();
+                refresh(0.45);
+            }
+            function stepSel(d) {
+                var n = CITIES.length;
+                if (!n) return;
+                select(sel < 0 ? (d > 0 ? 0 : n - 1) : (sel + d + n) % n);
+            }
+            function go(sc, s) {
+                var was = scene;
+                if (sc === was) { if (sc === 'places' && s !== sel) select(s); return; }
+                scene = sc; sel = sc === 'places' ? s : -1; hot = null; held = null; hover = null; alsoHot = -1;
+                M.forEach(function (m) { m.rT = rFor(m); m.park = null; m.noFree = false; m.goal = null; wakeM(m); });
+                if (RM) placeNow();
+                else if (was === 'places') shove();
+                announce();
+                refresh(0.5);
+            }
+            function parseHash() {
+                var m = /^#(places|code)(?:\/(\d+))?$/.exec(location.hash);
+                if (!m) return {sc: 'home', s: -1};
+                return {sc: m[1], s: m[1] === 'places' && m[2] ? clamp(+m[2] - 1, 0, CITIES.length - 1) : -1};
+            }
+            function route() { if (!ON) return; var r = parseHash(); go(r.sc, r.s); }
+            function goHome() {
+                if (location.hash) { try { history.pushState(null, '', location.pathname + location.search); } catch (e) { location.hash = ''; } }
+                go('home', -1);
+            }
+
+            function enter() {
+                ON = true;
+                root.classList.add('table');
+                [cv, uiEl, tag, say].forEach(function (el) { body.appendChild(el); });
+                // 原来文档里的链接不再占 Tab 位，交给盖在桌面上的那一套
+                docLinks().forEach(function (a) { a.tabIndex = -1; });
+                window.scrollTo(0, 0);
+                sizeGL();
+                var r = parseHash();
+                scene = r.sc; sel = r.s; hot = null; alsoHot = -1; held = null; hover = null;
+                M.forEach(function (m) { m.live = false; m.spawn = 0; m.asleep = false; m.goal = m.park = null; m.noFree = false; m.r = m.rT = rFor(m); });
+                DOMES = []; LKEY = ''; KEEPSIG = '';
+                announce();
+                refresh(0);
+                // 先把“只重印一小块”和“显卡上混一张”这两条路走一遍，第一次悬停、第一次切换就不会卡一下
+                uploadRegions(curT, [spanBox(CH.spans[0])]);
+                blit(1, 0, 0, 1); blit(2, 0, 0, 1);
+                if (!probed) {
+                    probed = true;
+                    if (!tune(probe())) { slowExit(); return; }
+                }
+                if (RM) placeNow(); else intro();
+                perfReset();
+                listenTilt();
+                wake();
+            }
+            function leave() {
+                ON = false;
+                if (raf) { cancelAnimationFrame(raf); raf = 0; }
+                held = null; hover = null; suppress = false; tag.className = '';
+                root.classList.remove('table');
+                [cv, uiEl].forEach(function (el) { el.classList.remove('grab', 'grabbing'); });
+                [cv, uiEl, tag, say].forEach(function (el) { if (el.parentNode) el.parentNode.removeChild(el); });
+                docLinks().forEach(function (a) { a.removeAttribute('tabindex'); });
+                if (!glDead) freeGL();
+                // 文档停在和刚才那一幕对应的地方
+                var el = scene === 'places' || scene === 'code' ? doc.getElementById(scene) : null;
+                window.scrollTo({top: el ? el.getBoundingClientRect().top + window.pageYOffset : 0, behavior: 'instant'});
+            }
+            // 第一次进来先试画一帧量一下；太慢（比如没有显卡、用软件画）就不用桌子了
+            function probe() {
+                var t = T(), pts = scatter(M.length), saved = M.map(function (m) { return [m.live, m.x, m.y]; });
+                M.forEach(function (m, k) { m.live = true; m.x = pts[k].x; m.y = pts[k].y; });
+                // 读回一个像素，逼它真的画完再计时（finish 在浏览器里不一定等）
+                var px = new Uint8Array(4);
+                draw(t); gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px);
+                var t0 = performance.now();
+                draw(t); gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px);
+                var ms = performance.now() - t0;
+                M.forEach(function (m, k) { m.live = saved[k][0]; m.x = saved[k][1]; m.y = saved[k][2]; });
+                draw(t);
+                return ms;
+            }
+            // 按一帧要多久，挑一个分辨率；最低一档也太慢就放弃
+            var STEPS = [1, 0.75, 0.5];
+            function tune(ms) {
+                var base = ms / (RSCALE * RSCALE);
+                for (var k = 0; k < STEPS.length; k++) {
+                    if (STEPS[k] > RSCALE) continue;
+                    if (base * STEPS[k] * STEPS[k] <= 30) { if (STEPS[k] !== RSCALE) { RSCALE = STEPS[k]; sizeGL(); } return true; }
+                }
+                if (base * 0.25 <= 45) { if (RSCALE !== 0.5) { RSCALE = 0.5; sizeGL(); } return true; }
+                return false;
+            }
+            function slowExit() {
+                perfOut = true; store(SLOW_KEY, '1', true);
+                update();
+            }
+            // 动着的时候一直看帧间隔：中位数太大就降分辨率，降到底还慢就退回文档
+            var pf = {s: [], skip: 2, last: 0};
+            function perfReset() { pf.s = []; pf.skip = 2; pf.last = 0; }
+            function perfCheck() {
+                var a = pf.s;
+                if (a.length < 3) return;
+                var sum = a.reduce(function (x, y) { return x + y; }, 0);
+                if (a.length < 20 && sum < 700) return;
+                var med = a.slice().sort(function (x, y) { return x - y; })[a.length >> 1];
+                pf.s = [];
+                if (med <= 40) return;
+                var base = med / (RSCALE * RSCALE);
+                if (base * 0.25 > 50) { slowExit(); return; }
+                for (var k = 0; k < STEPS.length; k++) {
+                    if (STEPS[k] < RSCALE && (base * STEPS[k] * STEPS[k] <= 40 || STEPS[k] === 0.5)) { RSCALE = STEPS[k]; sizeGL(); pf.skip = 2; return; }
+                }
+            }
+
+            // ---------------------------------------------------------------- 尺寸
+            // 只算位置，不碰显卡：桌子关着的时候也用它来判断放不放得下
+            function geom() {
+                W = Math.max(1, window.innerWidth); H = Math.max(1, window.innerHeight);
+                dpr = Math.min(window.devicePixelRatio || 1, 2);
+                narrow = W < 600;
+                SC = clamp(Math.min(W, H) / 800, 0.45, 1.4);
+                R0 = clamp(Math.min(W, H) * 0.05, 22, 48);
+                MG = narrow ? 20 : 32;
+                colL = Math.max(MG, (W - 1280) / 2); colR = W - colL; colW = colR - colL;
+                HB = (narrow ? 24 : 32) + 36; BT = H - (narrow ? 22 : 30) - 22;
+                MAP = placesGeom();
+                PTS = CITIES.map(function (c) { return mapXY(c.lon, c.lat); });
+                MPTS = MINOR.map(function (c) { return mapXY(c.lon, c.lat); });
+            }
+            function sizeGL() {
+                cv.width = Math.max(1, Math.round(W * dpr * RSCALE)); cv.height = Math.max(1, Math.round(H * dpr * RSCALE));
+                // 弹珠会把桌面放大三倍左右，所以桌面画得比屏幕细；小屏幕、触屏上少细一点，省显存
+                var vd = gl.getParameter(gl.MAX_VIEWPORT_DIMS);
+                var maxT = Math.min(gl.getParameter(gl.MAX_TEXTURE_SIZE), vd[0], vd[1], 4096);
+                var small = narrow || (window.matchMedia && matchMedia('(pointer: coarse)').matches);
+                var fs = Math.max(0.5, Math.min(2 * dpr, maxT / Math.max(W, H), Math.sqrt((small ? 3.5e6 : 6.4e6) / (W * H))));
+                var tw = Math.round(W * fs), th = Math.round(H * fs);
+                if (tw !== texW || th !== texH) {
+                    texs.forEach(function (t) { if (t) gl.deleteTexture(t); });
+                    texs = [null, null, null]; texW = tw; texH = th; prevT = curT = 0; fadeT0 = -1;
+                    fc.width = tw; fc.height = th;
+                }
+            }
+            function freeGL() {
+                texs.forEach(function (t) { if (t) gl.deleteTexture(t); });
+                texs = [null, null, null]; texW = texH = 0; prevT = curT = 0; fadeT0 = -1;
+                cv.width = cv.height = 1; fc.width = fc.height = 1; rc.width = rc.height = 1;
+            }
+            // 三幕都放得下才用桌子（不再缩字、也不丢内容）
+            function fitsAll() {
+                return !!(MAP && layChrome().fits && layHome().fits && layPlaces().fits && layCode().fits);
+            }
+            function onResize() {
+                var ow = W, oh = H, was = ON;
+                geom();
+                fits = fitsAll();
+                update();
+                if (!ON || !was) return;
+                sizeGL();
+                M.forEach(function (m) {
+                    m.x *= W / ow; m.y *= H / oh; m.tx *= W / ow; m.ty *= H / oh;
+                    m.r = m.rT = rFor(m); m.px = m.x; m.py = m.y; wakeM(m);
+                });
+                walls(true);
+                hover = null; LKEY = '';
+                refresh(0);
+            }
+
+            // ---------------------------------------------------------------- 声音：玻璃碰玻璃
+            var AC = null, master = null, voices = 0, lastSnd = 0;
+            function toggleSound() {
+                if (!AC) {
+                    var Ctor = window.AudioContext || window.webkitAudioContext;
+                    if (Ctor) {
+                        try {
+                            AC = new Ctor();
+                            master = AC.createGain(); master.gain.value = 0.7;
+                            var comp = AC.createDynamicsCompressor();
+                            master.connect(comp); comp.connect(AC.destination);
+                        } catch (e) { AC = null; }
+                    }
+                }
+                soundOn = !soundOn;
+                if (soundOn && AC && AC.state === 'suspended') AC.resume();
+                refresh(0.2);
+            }
+            function clink(speed, wall) {
+                if (!AC || AC.state !== 'running' || voices > 24) return;
+                var t = AC.currentTime;
+                if (t - lastSnd < 0.01) return;
+                lastSnd = t;
+                var lv = Math.pow(clamp((speed - 20) / (1400 * SC), 0, 1), 0.8) * (wall ? 0.16 : 0.3);
+                if (lv < 0.004) return;
+                // 几个不成倍数的高音，很快就没了；碰到桌边的低一些、闷一些
+                var f0 = wall ? 700 + Math.random() * 400 : 2200 + Math.random() * 1100;
+                var parts = wall ? [[1, 1, 0.018], [2.3, 0.35, 0.01]] : [[1, 1, 0.07], [2.32, 0.45, 0.04], [4.25, 0.2, 0.025]];
+                parts.forEach(function (p) {
+                    var f = f0 * p[0] * (1 + (Math.random() - 0.5) * 0.01);
+                    if (f > AC.sampleRate * 0.45) return;
+                    var o = AC.createOscillator(), g = AC.createGain(), end = t + p[2] * 7;
+                    o.type = 'sine'; o.frequency.value = f;
+                    g.gain.setValueAtTime(0.0001, t);
+                    g.gain.exponentialRampToValueAtTime(Math.max(0.0002, lv * p[1]), t + 0.0015);
+                    g.gain.exponentialRampToValueAtTime(0.0001, end);
+                    o.connect(g); g.connect(master);
+                    o.start(t); o.stop(end + 0.02);
+                    voices++;
+                    o.onended = function () { voices--; o.disconnect(); g.disconnect(); };
+                });
+            }
+
+            // ---------------------------------------------------------------- 手机倾斜
+            function onOrient(e) {
+                if (!ON || e.beta == null || e.gamma == null) return;
+                var t = T(), ang = ((screen.orientation && screen.orientation.angle) || window.orientation || 0) * PI / 180;
+                var dx = Math.sin(e.gamma * PI / 180), dy = Math.sin(e.beta * PI / 180);
+                var x = dx * Math.cos(ang) + dy * Math.sin(ang), y = -dx * Math.sin(ang) + dy * Math.cos(ang);
+                // 拿着手机的那个角度算“平”，慢慢跟上
+                if (tilt.bx === null) { tilt.bx = x; tilt.by = y; tilt.t = t; }
+                var k = 1 - Math.exp(-Math.max(0, t - tilt.t) / 5);
+                tilt.t = t; tilt.bx += (x - tilt.bx) * k; tilt.by += (y - tilt.by) * k;
+                tilt.gx = x - tilt.bx; tilt.gy = y - tilt.by; tilt.on = true;
+                lean.tx = clamp(tilt.gx * 3, -1, 1); lean.ty = clamp(tilt.gy * 3, -1, 1);
+                if (Math.hypot(tilt.gx, tilt.gy) * 2600 * SC > CF() * 1.02) M.forEach(wakeM);
+                wake();
+            }
+            // 要权限的（iPhone）就不倾斜了，不弹窗；不用权限的（Android）照旧
+            var tiltOn = false;
+            function listenTilt() {
+                var D = window.DeviceOrientationEvent;
+                if (tiltOn || !D || typeof D.requestPermission === 'function') return;
+                if (!(window.matchMedia && matchMedia('(pointer: coarse)').matches)) return;
+                tiltOn = true;
+                window.addEventListener('deviceorientation', onOrient);
+            }
+
+            // ---------------------------------------------------------------- 手
+            function setPtr(e, t) {
+                var dt = t - ptr.t, x = e.clientX, y = e.clientY;
+                if (ptr.has && dt > 0 && dt < 0.1) {
+                    var k = 0.65;
+                    ptr.vx = ptr.vx * (1 - k) + (x - ptr.x) / dt * k;
+                    ptr.vy = ptr.vy * (1 - k) + (y - ptr.y) / dt * k;
+                } else if (dt > 0) { ptr.vx = 0; ptr.vy = 0; }
+                ptr.x = x; ptr.y = y; ptr.t = t; ptr.has = true; ptr.mouse = e.pointerType === 'mouse';
+                lean.tx = clamp(x / W * 2 - 1, -1, 1); lean.ty = clamp(y / H * 2 - 1, -1, 1);
+            }
+            function holdTo(x, y) {
+                var r = held ? held.r : 0;
+                hold.x = clamp(x + hold.ox, r, W - r); hold.y = clamp(y + hold.oy, r, H - r);
+            }
+            function cursor() {
+                var over = ptr.has && ptr.mouse && !held && marbleAt(ptr.x, ptr.y, 0);
+                [cv, uiEl].forEach(function (el) {
+                    el.classList.toggle('grabbing', !!held);
+                    el.classList.toggle('grab', !held && !!over);
+                });
+            }
+            // 地图上的小点和下面那排名字
+            function alsoAt(x, y) {
+                if (scene !== 'places' || !LAY || marbleAt(x, y, 2)) return -1;
+                var i, best = -1, bd = 9;
+                for (i = 0; i < MPTS.length; i++) {
+                    var d = Math.hypot(MPTS[i].x - x, MPTS[i].y - y);
+                    if (d < bd) { bd = d; best = i; }
+                }
+                if (best >= 0) return best;
+                var list = LAY.also || [];
+                for (i = 0; i < list.length; i++) {
+                    var b = list[i];
+                    if (x >= b.x && x <= b.x + b.w && y >= b.y && y <= b.y + b.h) return b.i;
+                }
+                return -1;
+            }
+            window.addEventListener('pointerdown', function (e) {
+                if (!ON) return;
+                var t = T();
+                wake();
+                if (e.button > 0) return;
+                ptr.has = false; setPtr(e, t);
+                ptr.downX = e.clientX; ptr.downY = e.clientY; ptr.downT = t; ptr.moved = 0;
+                var m = marbleAt(e.clientX, e.clientY, e.pointerType === 'touch' ? 8 : 0);
+                suppress = !!m;
+                if (m) {
+                    held = m; wakeM(m);
+                    hold.ox = m.x - e.clientX; hold.oy = m.y - e.clientY; holdTo(e.clientX, e.clientY);
+                    e.preventDefault();
+                    try { cv.setPointerCapture(e.pointerId); } catch (err) {}
+                } else if (e.target === cv) slap(e.clientX, e.clientY);
+                cursor();
+            }, true);
+            window.addEventListener('pointermove', function (e) {
+                if (!ON) return;
+                var t = T(), x0 = ptr.x, y0 = ptr.y, had = ptr.has;
+                setPtr(e, t);
+                ptr.moved += had ? Math.hypot(ptr.x - x0, ptr.y - y0) : 0;
+                if (held) holdTo(ptr.x, ptr.y);
+                else if (had) nudge(x0, y0, ptr.x, ptr.y, ptr.vx, ptr.vy);
+                if (ptr.mouse) {
+                    hover = marbleAt(ptr.x, ptr.y, 0);
+                    // 地图上：指到哪颗就看哪颗
+                    if (scene === 'places' && hover && hover.city !== sel && !held && had && t - hoverSelT > 0.25) {
+                        hoverSelT = t; select(hover.city);
+                    }
+                    var ah = held ? -1 : alsoAt(ptr.x, ptr.y);
+                    if (ah !== alsoHot) { alsoHot = ah; refresh(0); }
+                }
+                cursor();
+                wake();
+            }, true);
+            function release(e) {
+                if (!held) return;
+                var m = held, t = T();
+                held = null;
+                if (t - ptr.t > 0.05) { ptr.vx = ptr.vy = 0; }
+                var sp = Math.hypot(m.vx, m.vy), cap = 4000 * SC;
+                if (sp > cap) { m.vx *= cap / sp; m.vy *= cap / sp; }
+                if (scene === 'places' && ptr.moved < 8 && t - ptr.downT < 0.6) select(m.city);
+                if (e && e.type === 'pointercancel') suppress = false;
+                cursor();
+                wake();
+            }
+            window.addEventListener('pointerup', function (e) {
+                if (!ON) return;
+                if (e.pointerType !== 'mouse') { ptr.has = false; hover = null; }
+                release(e);
+                if (suppress) setTimeout(function () { suppress = false; }, 400);
+            }, true);
+            window.addEventListener('pointercancel', function (e) { if (ON) release(e); }, true);
+            // 按在弹珠上的那一下归弹珠，下面的链接不算点到，也不拿焦点
+            window.addEventListener('mousedown', function (e) { if (ON && held) e.preventDefault(); }, true);
+            ['click', 'auxclick'].forEach(function (k) {
+                window.addEventListener(k, function (e) {
+                    if (ON && suppress) { e.preventDefault(); e.stopPropagation(); suppress = false; }
+                }, true);
+            });
+            doc.addEventListener('mouseout', function (e) {
+                if (!ON || e.relatedTarget) return;
+                ptr.has = false; hover = null; lean.tx = lean.ty = 0;
+                if (alsoHot >= 0) { alsoHot = -1; refresh(0); }
+                cursor(); wake();
+            });
+            window.addEventListener('blur', function () { if (ON) release(null); });
+            window.addEventListener('keydown', function (e) {
+                if (!ON) return;
+                wake();
+                if (e.metaKey || e.ctrlKey || e.altKey) return;
+                if (e.key === 'Escape' && scene !== 'home') { goHome(); return; }
+                if (scene !== 'places') return;
+                if (e.key === 'ArrowRight') { e.preventDefault(); stepSel(1); }
+                else if (e.key === 'ArrowLeft') { e.preventDefault(); stepSel(-1); }
+            });
+            // 文档那边，#places/3 这种地址也停到“走过的地方”
+            function docHash() {
+                if (ON || !/^#places\/\d+$/.test(location.hash)) return;
+                var el = doc.getElementById('places');
+                if (el) el.scrollIntoView();
+            }
+            window.addEventListener('hashchange', function () { if (ON) route(); else docHash(); });
+            window.addEventListener('popstate', function () { if (ON) route(); });
+            var rz = 0;
+            window.addEventListener('resize', function () { clearTimeout(rz); rz = setTimeout(onResize, 80); });
+            doc.addEventListener('visibilitychange', function () { perfReset(); wake(); });
+
+            // ---------------------------------------------------------------- 每一帧
+            var aD = new Float32Array(ND * 4), aP = new Float32Array(NM * 4), aQ = new Float32Array(NM * 4), aG = new Float32Array(NM * 4), aV = new Float32Array(NM * 4);
+            function lightDir() {
+                var az = (135 - 24 * lean.x + 14 * lean.y) * PI / 180;
+                var el = (48 + 5 * (1 - Math.min(1, Math.hypot(lean.x, lean.y)))) * PI / 180;
+                return [Math.cos(el) * Math.cos(az), Math.cos(el) * Math.sin(az), Math.sin(el)];
+            }
+            function draw(t) {
+                var n = 0;
+                M.forEach(function (m) {
+                    if (!m.live) return;
+                    var o = n * 4, c = PTS[m.city], disp = Math.hypot(m.x - c.x, m.y - c.y);
+                    aP[o] = m.x; aP[o + 1] = H - m.y; aP[o + 2] = m.r; aP[o + 3] = c.x;
+                    aQ[o] = m.q[0]; aQ[o + 1] = m.q[1]; aQ[o + 2] = m.q[2]; aQ[o + 3] = m.q[3];
+                    aG[o] = m.glass[0]; aG[o + 1] = m.glass[1]; aG[o + 2] = m.glass[2]; aG[o + 3] = H - c.y;
+                    aV[o] = m.vane[0]; aV[o + 1] = m.vane[1]; aV[o + 2] = m.vane[2];
+                    aV[o + 3] = lineK * clamp((disp - 1.5) / 3, 0, 1) * 0.8;
+                    n++;
+                });
+                gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+                gl.viewport(0, 0, cv.width, cv.height);
+                gl.useProgram(PR.p);
+                gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, texs[prevT]);
+                gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, texs[curT]);
+                gl.activeTexture(gl.TEXTURE0);
+                gl.uniform1i(PR.uA, 0); gl.uniform1i(PR.uB, 1);
+                gl.uniform1f(PR.uMix, fadeMix(t));
+                gl.uniform1f(PR.uDpr, cv.width / W);
+                gl.uniform2f(PR.uView, W, H);
+                gl.uniform3f(PR.uL, LV[0], LV[1], LV[2]);
+                gl.uniform3f(PR.uLine, LINE[0], LINE[1], LINE[2]);
+                gl.uniform1i(PR.uN, n);
+                gl.uniform4fv(PR.uP, aP); gl.uniform4fv(PR.uQ, aQ); gl.uniform4fv(PR.uG, aG); gl.uniform4fv(PR.uV, aV);
+                var nd = 0;
+                DOMES.forEach(function (d) {
+                    var sz = domeS(d, t);
+                    if (sz <= 0.001 || nd >= ND) return;
+                    aD[nd * 4] = d.x; aD[nd * 4 + 1] = H - d.y; aD[nd * 4 + 2] = d.a * sz; aD[nd * 4 + 3] = sz;
+                    nd++;
+                });
+                gl.uniform1i(PR.uND, nd); gl.uniform4fv(PR.uD, aD);
+                gl.drawArrays(gl.TRIANGLES, 0, 3);
+            }
+            // 弹珠旁边的城市名；地图上小点的名字
+            function showTag() {
+                var m = scene !== 'places' ? (held || (ptr.mouse && hover)) : null, name = null, x = 0, y = 0, r = 0;
+                if (m && m.live) { name = CITIES[m.city].name; x = m.x; y = m.y; r = m.r; }
+                else if (scene === 'places' && alsoHot >= 0 && ptr.has) { name = MINOR[alsoHot].name; x = MPTS[alsoHot].x; y = MPTS[alsoHot].y; r = 4; }
+                if (!name) { tag.className = ''; return; }
+                if (tag.textContent !== name) tag.textContent = name;
+                var w = tag.offsetWidth, tx = x + r + 10;
+                if (tx + w > W - 8) tx = x - r - 10 - w;
+                tag.style.transform = 'translate(' + Math.round(tx) + 'px,' + Math.round(y - 6) + 'px)';
+                tag.className = 'on';
+            }
+            function frame() {
+                raf = 0;
+                if (!ON) return;
+                var now = performance.now();
+                if (pf.last && !doc.hidden) { if (pf.skip > 0) pf.skip--; else pf.s.push(now - pf.last); }
+                var t = T(), dt = Math.min(0.1, Math.max(0, t - last)), busy = false;
+                last = t;
+                if (ptr.has && t - ptr.t > 0.05) { ptr.vx = ptr.vy = 0; }
+                acc += dt;
+                var steps = 0;
+                while (acc >= STEP && steps < 14) { physics(STEP, t); acc -= STEP; steps++; }
+                if (steps === 14) acc = 0;
+                if (ptr.has && ptr.mouse && !held) hover = marbleAt(ptr.x, ptr.y, 0);
+                var k = 1 - Math.exp(-dt / 0.35);
+                lean.x += (lean.tx - lean.x) * k; lean.y += (lean.ty - lean.y) * k;
+                if (Math.abs(lean.tx - lean.x) + Math.abs(lean.ty - lean.y) > 0.002) busy = true;
+                LV = lightDir();
+                var lt = scene === 'places' ? 1 : 0;
+                lineK += (lt - lineK) * Math.min(1, dt * 6);
+                if (Math.abs(lt - lineK) < 0.002) lineK = lt; else busy = true;
+                draw(t);
+                showTag();
+                if (held || fadeMix(t) < 1) busy = true;
+                M.forEach(function (m) { if (!m.live ? m.spawn > 0 : !m.asleep) busy = true; });
+                DOMES.forEach(function (d) { if (domeS(d, t) !== d.to) busy = true; });
+                perfCheck();
+                if (!ON) return;
+                pf.last = busy ? now : 0;
+                if (busy) raf = requestAnimationFrame(frame);
+            }
+            function wake() {
+                if (raf || !ON) return;
+                pf.last = 0;
+                last = T(); acc = 0;
+                raf = requestAnimationFrame(frame);
+            }
+
+            // ---------------------------------------------------------------- 开始
+            loadSketches();
+            geom();
+            fits = fitsAll();
+            update();
+            if (!ON) docHash();
         })();
     </script>
 </body>
